@@ -1,0 +1,18 @@
+import java.io.IOException;
+
+import mchannels.MulticastChannel;
+
+
+public class Peer {
+
+	/**
+	 * @param args
+	 * @throws IOException 
+	 */
+	public static void main(String[] args) throws IOException {
+
+		MulticastChannel mc = new MulticastChannel("230.0.0.1",1200);
+		mc.start();
+	}
+
+}

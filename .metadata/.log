@@ -116,3 +116,6 @@ Binding(ALT+SHIFT+ARROW_DOWN,
 		,,true),null),
 	org.eclipse.ui.defaultAcceleratorConfiguration,
 	org.eclipse.mylyn.tasks.ui.views.tasks,,,system)
+
+!ENTRY org.eclipse.m2e.logback.appender 4 0 2014-03-23 18:46:45.484
+!MESSAGE Failed to open search index.

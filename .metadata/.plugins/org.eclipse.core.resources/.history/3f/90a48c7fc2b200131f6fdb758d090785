@@ -1,0 +1,12 @@
+package mchannels;
+
+import java.io.IOException;
+
+public class MControl extends MulticastChannel {
+
+	public MControl(String adr, int port) throws IOException {
+		super(adr, port);
+		// TODO Auto-generated constructor stub
+	}
+
+}

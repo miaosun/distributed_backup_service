@@ -1,0 +1,7 @@
+package mchannels;
+
+public abstract class MulticastChannel extends Thread {
+
+	
+
+}

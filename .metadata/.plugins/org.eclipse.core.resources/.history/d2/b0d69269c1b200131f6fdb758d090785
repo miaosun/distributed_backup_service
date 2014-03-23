@@ -1,0 +1,16 @@
+import mchannels.MulticastChannel;
+
+
+public class Peer {
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+
+		MulticastChannel mc = new MulticastChannel("230.0.0.1",1200) {
+		};
+
+	}
+
+}

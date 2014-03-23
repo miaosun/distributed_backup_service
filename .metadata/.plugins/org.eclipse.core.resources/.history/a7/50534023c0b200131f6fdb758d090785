@@ -1,0 +1,80 @@
+package mchannels;
+
+import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.MulticastSocket;
+import java.net.Socket;
+
+public abstract class MulticastChannel extends Thread {
+
+	public int port;
+	public String adr;
+	MulticastSocket msocket;
+	InetAddress maddress;
+
+	public MulticastChannel(String adr, int port) throws IOException {
+		super("MulticastChannel");
+		this.adr = adr;
+		this.port = port;
+		msocket = new MulticastSocket(port);
+		maddress = InetAddress.getByName(adr);
+		msocket.joinGroup(maddress);
+	}
+
+	public void receivePacket() {
+		try{
+			byte[] data = new byte[1024];
+			packet = new DatagramPacket(data,data.length);
+			DatagramPacket packet = new DatagramPacket(arg0, arg1)
+			msocket.receive(p)
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void sendPacket(String msg) {
+
+		try{
+			InetAddress address = InetAddress.getByName(adr);
+			DatagramSocket socket = new DatagramSocket();
+
+			byte[] buffer = new byte[msg.length()];
+			buffer = msg.getBytes();
+
+			DatagramPacket sendPacket = new DatagramPacket(buffer, buffer.length,  address, port);
+			socket.send(sendPacket);
+			socket.close();
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void run() {
+		DatagramSocket socket; 
+		DatagramPacket packet; 
+		InetAddress address; 
+
+		try {
+			address = InetAddress.getByName(adr);
+			socket = new DatagramSocket(); 
+
+			byte[] data = null; 				
+			while(true) { 
+
+				String str = new String("PORT:1201");  
+				data = str.getBytes(); 
+				packet = new DatagramPacket(data,str.length(),address,PORT);
+				System.out.println("Sending <" + str + ">"); 
+				socket.send(packet);
+			} 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+}

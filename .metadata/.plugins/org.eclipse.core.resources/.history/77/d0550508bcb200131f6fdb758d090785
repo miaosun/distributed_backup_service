@@ -1,0 +1,17 @@
+package mchannels;
+
+public abstract class MulticastChannel extends Thread {
+
+	public void receivePacket() {
+		
+	}
+	
+	public void sendPacket() {
+		
+	}
+	
+	public void run() {
+		
+	}
+
+}
