@@ -2,21 +2,15 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Scanner;
 
-import muticastMsgs.MControlReader;
+import muticastMsgs.MControlMsg;
 import muticastMsgs.MDBackupMsg;
 
 
 public class Peer {
 
-	public final static int PORT = 1200;
+	public final static int PORT = 1200; 
 	public final static String adr = new String("230.0.0.1"); //any class D address
-	
-	/*
-	 * Estruturas de dados
-	 * 	Chunks armazenados
-	 * 	Respostas "Stored"
-	 * 	
-	 */
+
 
 	/**
 	 * @param args
@@ -24,7 +18,7 @@ public class Peer {
 	 */
 	public static void main(String[] args) throws IOException {
 
-		MControlReader mc = new MControlReader(adr,PORT);
+		MControlMsg mc = new MControlMsg(adr,PORT);
 		mc.start();
 
 		menu();
@@ -52,10 +46,11 @@ public class Peer {
 				backupRequest();
 				break;
 
+
 			case 2:
 				System.out.println("Waiting message...");
-				receiveRequest();
 				break;
+
 
 			case 3:
 				System.out.println("Exit Successful");
@@ -66,13 +61,10 @@ public class Peer {
 
 			};
 
+			//send msg
+
 		}
 
-	}
-
-	private static void receiveRequest() {
-		// TODO Auto-generated method stub
-		
 	}
 
 	private static void backupRequest() throws IOException {

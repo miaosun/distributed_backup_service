@@ -9,7 +9,6 @@ INDEX VERSION 1.126+C:\Users\Reis\Desktop\2013-2014\2º Semestre\SDIS\TP1\.metada
 4041092966.index
 1299022128.index
 30765161.index
-3765457953.index
 163172794.index
 3065916431.index
 3974580528.index
