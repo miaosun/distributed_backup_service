@@ -4,9 +4,20 @@ import java.io.IOException;
 
 public class MDBackupMsg extends MulticastChannelMsg {
 
+	String body;
+	
 	public MDBackupMsg(String adr, int port) throws IOException {
 		super(adr, port);
-		// TODO Auto-generated constructor stub
+		initiatorPeer=false;
+	}
+
+	public MDBackupMsg(String adr, int port, String fileID, int chunkNR, int repDegree, String body) throws IOException {
+		super(adr, port);
+		initiatorPeer=true;
+		this.fileID=fileID;
+		this.chunkNR=chunkNR;
+		this.replicationDegree=repDegree;
+		this.body=body;
 	}
 
 	@Override
@@ -34,4 +45,51 @@ public class MDBackupMsg extends MulticastChannelMsg {
 			return false;
 	}
 
+
+	private void putchunkSend() {
+
+	}
+
+	private void mdbReader() {
+		while(true) {
+			String msg = receivePacket();
+			//tratar msg
+		}
+	}
+	
+	//forma putchunk message
+	private String putchunkFormer() {
+		String putchunkMsg = msgHeader()+" "+body;
+		return putchunkMsg;
+	}
+
+
+	public void run() {
+		if(initiatorPeer) {
+			
+			String msg = putchunkFormer();
+
+			long waitTime = 500;
+			int attempts = 5;
+
+			while(attempts>0){ //e nao atingido nr desejado de stored's
+				System.out.println("Sending chunk...");
+				sendPacket(msg);
+
+				try {
+					Thread.sleep(waitTime);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+				//verificar se já se obteve nr desejado de respostas
+				attempts--;
+				waitTime*=2;
+			}			
+
+		}
+		else //MDB Reader
+		{
+			mdbReader();
+		}
+	}
 }

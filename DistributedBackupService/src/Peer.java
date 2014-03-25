@@ -71,22 +71,18 @@ public class Peer {
 	}
 
 	private static void receiveRequest() {
-		// TODO Auto-generated method stub
+
+		
 		
 	}
 
 	private static void backupRequest() throws IOException {
 		/*
-		//Escolher ficheiro
-		//split do ficheiro
-
-		//ciclo para enviar todos os chunks do ficheiro
-
 		BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
 		String sentence = inputStream.readLine();
 
 		MDBackupMsg mdbMsg = new MDBackupMsg(adr,PORT);
-		 */
+		*/
 	}
 
 }

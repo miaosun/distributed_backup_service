@@ -1,0 +1,90 @@
+package muticastMsgs;
+
+import java.io.IOException;
+
+public class MDBackupMsg extends MulticastChannelMsg {
+
+	boolean initiatorPeer;
+	String fileID;
+	int chunkNR;
+	int replicationDegree;
+	String body;
+
+
+	public MDBackupMsg(String adr, int port) throws IOException {
+		super(adr, port);
+		initiatorPeer=false;
+	}
+
+	public MDBackupMsg(String adr, int port, String fileID, int chunkNR, int repDegree, String body) throws IOException {
+		super(adr, port);
+		initiatorPeer=true;
+		this.fileID=fileID;
+		this.chunkNR=chunkNR;
+		this.replicationDegree=repDegree;
+		this.body=body;
+	}
+
+	@Override
+	public void processMsg(String msg) {
+		// TODO Auto-generated method stub
+
+		System.out.println("Process Backup Message");
+		String[] temp = msg.split(" ");
+		String cmd = temp[0].trim();
+		System.out.println("O commando: " + cmd);
+
+		if(cmd.equals("PUTCHUNK")) {
+			if(verifyVersion(temp[1].trim())) {
+
+			}
+		}
+
+	}
+
+	public Boolean verifyVersion(String version) {
+		if(version.length()==3 && version.substring(1,2).equals('.') && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
+			return true;
+		}
+		else
+			return false;
+	}
+
+
+	private void putchunkSend() {
+
+	}
+	
+	private void mdbReader() {
+		while(true) {
+			String msg = receivePacket();
+			//tratar msg
+		}
+	}
+
+
+	public void run() {
+		if(initiatorPeer) {
+			System.out.println("Sending chunk...");
+			//TODO formar mensagem completa
+			String msg = " ";
+			sendPacket(msg);
+			
+			long waitTime = 500;
+			int attempts = 0;
+			
+			while(attempts<5)
+			try {
+				Thread.sleep(waitTime);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			
+
+		}
+		else //MDB Reader
+		{
+			mdbReader();
+		}
+	}
+}
