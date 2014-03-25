@@ -1,0 +1,37 @@
+package muticastMsgs;
+
+import java.io.IOException;
+
+public class MDBackupMsg extends MulticastChannelMsg {
+
+	public MDBackupMsg(String adr, int port) throws IOException {
+		super(adr, port);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void processMsg(String msg) {
+		// TODO Auto-generated method stub
+
+		System.out.println("Process Backup Message");
+		String[] temp = msg.split(" ");
+		String cmd = temp[0].trim();
+		System.out.println("O commando: " + cmd);
+
+		if(cmd.equals("PUTCHUNK")) {
+			if(verifyVersion(temp[1].trim())) {
+
+			}
+		}
+
+	}
+
+	public Boolean verifyVersion(String version) {
+		if(version.length()==3 && version.substring(1,2).equals('.') && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
+			return true;
+		}
+		else
+			return false;
+	}
+
+}
