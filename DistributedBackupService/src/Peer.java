@@ -1,20 +1,31 @@
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MulticastSocket;
 import java.util.Scanner;
+
+import subprotocols.FileBackup;
 
 import muticastMsgs.MControlReader;
 import muticastMsgs.MDBackupMsg;
+import muticastMsgs.MulticastChannelMsg;
 
 
 public class Peer {
 
-	public final static int PORT = 1200;
-	public final static String adr = new String("230.0.0.1"); //any class D address
+	//MC Channel
+	public final static int mcPort = 1200;
+	public final static String mcAdr = new String("230.0.0.1"); //any class D address
+	
+	//MDB Channel
+	public final static int mdbPort = 1200;
+	public final static String mdbAdr = new String("230.0.0.1"); //any class D address
 	
 	/*
 	 * Estruturas de dados
 	 * 	Chunks armazenados
 	 * 	Respostas "Stored"
+	 *  3 endereços multicast
 	 * 	
 	 */
 
@@ -24,9 +35,14 @@ public class Peer {
 	 */
 	public static void main(String[] args) throws IOException {
 
-		MControlReader mc = new MControlReader(adr,PORT);
+		//lançar thread ler MC
+		MControlReader mc = new MControlReader(mcAdr, mcPort);
 		mc.start();
-
+		
+		//lançar thread ler MDB
+		MDBackupMsg mdb = new MDBackupMsg(mdbAdr, mdbPort);
+		mdb.start();
+		
 		menu();
 	}
 
@@ -39,11 +55,11 @@ public class Peer {
 
 			System.out.println("Please Make a selection:"); 
 			System.out.println("[1] Send putchunk message"); 
-			System.out.println("[2] Receive putchunk message"); 
+			//System.out.println("[2] Receive putchunk message"); 
 			System.out.println("[3] exit"); 
 
 			System.out.println("Selection: ");
-			int selection=sc.nextInt();     
+			int selection=sc.nextInt();
 
 			switch (selection){
 
@@ -53,8 +69,8 @@ public class Peer {
 				break;
 
 			case 2:
-				System.out.println("Waiting message...");
-				receiveRequest();
+				System.out.println("Nothing here.");
+				
 				break;
 
 			case 3:
@@ -70,19 +86,17 @@ public class Peer {
 
 	}
 
-	private static void receiveRequest() {
-
-		
-		
-	}
 
 	private static void backupRequest() throws IOException {
-		/*
+		
+		System.out.println("filename: ");
 		BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
-		String sentence = inputStream.readLine();
-
-		MDBackupMsg mdbMsg = new MDBackupMsg(adr,PORT);
-		*/
+		String filename = inputStream.readLine();
+		
+		//TODO verificar se ficheiro existe!
+		
+		FileBackup backup = new FileBackup(filename);
+		backup.start();
 	}
 
 }

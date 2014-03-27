@@ -1,0 +1,19 @@
+package subprotocols;
+
+public class FileBackup {
+
+	public FileBackup() {
+		System.out.println("filename: ");
+		
+	}
+	
+}
+
+
+/*
+* TODO
+*
+* Escolher ficheiro
+* Split do ficheiro
+* ciclo enviar ficheiro chunk a chunk
+*/

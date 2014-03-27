@@ -12,10 +12,10 @@ public class MControlReader extends MulticastChannelMsg {
 	@Override
 	public void processMsg(String msg) {
 
-		System.out.println("Process Message");
+		System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
-		System.out.println("O commando: " + cmd);
+		System.out.println("O comando: " + cmd);
 
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
@@ -25,8 +25,12 @@ public class MControlReader extends MulticastChannelMsg {
 		}
 		else if(cmd.equals("GETCHUNK")){
 			if(verifyVersion(temp[1].trim())) {
-
+				//lança thread p restore
 			}
+		}
+		else
+		{
+			System.out.println("MESSAGE IGNORED");
 		}
 	}
 
@@ -39,12 +43,12 @@ public class MControlReader extends MulticastChannelMsg {
 	}
 
 	public void run() {
+		System.out.println("Running MC Reader");
 		//ciclo leitura MC
 		while(true) {
 			String msg = receivePacket();
 			processMsg(msg);
 		}
-		
 	}
 
 }

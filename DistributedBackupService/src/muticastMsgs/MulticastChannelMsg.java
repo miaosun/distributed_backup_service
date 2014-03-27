@@ -8,16 +8,14 @@ import java.net.MulticastSocket;
 
 public abstract class MulticastChannelMsg extends Thread {
 
+	byte[] CRLFseq = {0xD, 0xA};
+	String CRLF = new String(CRLFseq);
+	String version = "1.0";
+	
 	public int port;
 	public String adr;
 	MulticastSocket msocket;
 	InetAddress maddress;
-	
-	boolean initiatorPeer;
-	String fileID;
-	int chunkNR;
-	int replicationDegree;
-	//String body;
 
 	public MulticastChannelMsg(String adr, int port) throws IOException {
 		super("MulticastChannel");
@@ -25,8 +23,12 @@ public abstract class MulticastChannelMsg extends Thread {
 		this.port = port;
 		msocket = new MulticastSocket(port);
 		maddress = InetAddress.getByName(adr);
+	}
+	
+	public void listen() throws IOException {
 		msocket.joinGroup(maddress);
 	}
+
 
 	public String receivePacket() {
 		try{
@@ -41,7 +43,7 @@ public abstract class MulticastChannelMsg extends Thread {
 		}
 		return "";
 	}
-	
+
 	public void sendPacket(String msg) {
 
 		try{
@@ -58,16 +60,13 @@ public abstract class MulticastChannelMsg extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
-	protected String msgHeader() {
-		byte[] CRLFseq = {0xD, 0xA};
-		String CRLF = new String(CRLFseq);
-		String header = "PUTCHUNK 1.0 "+fileID+" "+chunkNR+" "+replicationDegree+" "+CRLF;
-		return header;
-	}
-	
-	public abstract void processMsg(String msg);
 
-	public abstract void run();
+	public void processMsg(String msg) {
+	}
+
+	public void run() {
+		System.out.println("at MCmsg run");
+		
+	}
 
 }

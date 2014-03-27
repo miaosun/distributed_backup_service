@@ -1,0 +1,22 @@
+package subprotocols;
+
+public class FileBackup extends Thread {
+
+	String filename;
+	
+	public FileBackup(String filename) {
+		this.filename=filename;
+	}
+	
+	public run() {
+		
+	}
+	/*
+	* TODO
+	*
+	* Split do ficheiro
+	* ciclo enviar ficheiro chunk a chunk (através de MDbackupmsg)
+	*/
+}
+
+
