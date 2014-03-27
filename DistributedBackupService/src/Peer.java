@@ -1,14 +1,16 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MulticastSocket;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 import java.util.Scanner;
 
 import subprotocols.FileBackup;
 
 import muticastMsgs.MControlReader;
 import muticastMsgs.MDBackupMsg;
-import muticastMsgs.MulticastChannelMsg;
 
 
 public class Peer {
@@ -19,7 +21,11 @@ public class Peer {
 	
 	//MDB Channel
 	public final static int mdbPort = 1200;
-	public final static String mdbAdr = new String("230.0.0.1"); //any class D address
+	public final static String mdbAdr = new String("230.0.0.2"); //any class D address
+	
+	static List<Chunk> backedupChunks;
+	static Queue<String> backupRequests; //String: filename
+	
 	
 	/*
 	 * Estruturas de dados
@@ -35,6 +41,12 @@ public class Peer {
 	 */
 	public static void main(String[] args) throws IOException {
 
+		backedupChunks = new ArrayList<Chunk>();
+		backupRequests = new LinkedList<String>();
+		
+		//TODO fazer set dos enderecos multicast e portos??
+		
+		
 		//lançar thread ler MC
 		MControlReader mc = new MControlReader(mcAdr, mcPort);
 		mc.start();
