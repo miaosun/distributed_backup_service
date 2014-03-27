@@ -29,7 +29,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 			System.out.println("ERROR: not permited!");
 		else
 		{
-			String message = "PUTCHUNK"+" "+version+" "+fileID+" "+chunkNR+" "+replicationDegree+" "+CRLF+body;
+			String message = "PUTCHUNK"+" "+version+" "+fileID+" "+chunkNR+" "+replicationDegree+" "+CRLF+CRLF+body;
 			sendPacket(message);
 		}
 	}

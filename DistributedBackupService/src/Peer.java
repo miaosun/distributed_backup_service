@@ -23,26 +23,22 @@ public class Peer {
 	public final static int mdbPort = 1200;
 	public final static String mdbAdr = new String("230.0.0.2"); //any class D address
 	
+	//MDR Channel
+	
 	static List<Chunk> backedupChunks;
 	static Queue<String> backupRequests; //String: filename
-	
-	
-	/*
-	 * Estruturas de dados
-	 * 	Chunks armazenados
-	 * 	Respostas "Stored"
-	 *  3 endereços multicast
-	 * 	
-	 */
-
+	static List<StoredtypeMessage> storedMessages;
 	/**
 	 * @param args
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
 
+		//Estruturas de Dados
 		backedupChunks = new ArrayList<Chunk>();
 		backupRequests = new LinkedList<String>();
+		storedMessages = new ArrayList<StoredtypeMessage>();
+		
 		
 		//TODO fazer set dos enderecos multicast e portos??
 		
