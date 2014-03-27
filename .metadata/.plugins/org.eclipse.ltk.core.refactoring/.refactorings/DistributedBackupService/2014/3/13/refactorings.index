@@ -1,8 +1,0 @@
-1395684582704	Rename package 'mchannels'
-1395684795626	Rename type 'MControl'
-1395685156783	Rename type 'MDataBackup'
-1395685182776	Rename type 'MulticastChannel'
-1395685247457	Rename type 'MDataRestore'
-1395692500027	Delete element
-1395740064907	Rename type 'MControlMsg'
-1395944733868	Rename type 'ChunkBackup'
