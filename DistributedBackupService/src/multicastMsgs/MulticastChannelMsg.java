@@ -12,6 +12,7 @@ public abstract class MulticastChannelMsg extends Thread {
 	public String adr;
 	MulticastSocket msocket;
 	InetAddress maddress;
+	boolean initiatorPeer;
 
 	public MulticastChannelMsg(String adr, int port) throws IOException {
 		super("MulticastChannel");

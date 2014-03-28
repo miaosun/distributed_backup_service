@@ -1,7 +1,7 @@
 package Peer;
 
 public class Chunk {
-	
+
 	String fileID;
 	int chunkNR;
 	int replicationDegree;
@@ -11,5 +11,16 @@ public class Chunk {
 		this.chunkNR=chunkNR;
 		this.replicationDegree=repDegree;
 	}
-	
+
+	public boolean exists() {
+		return Peer.getBackedupChunks().contains(this);	
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if ( obj instanceof Chunk && ((this.fileID).equals( ((Chunk)obj).fileID)) && ((this.chunkNR) == ((Chunk)obj).chunkNR) )
+			return true;
+		else
+			return false;
+	}
 }

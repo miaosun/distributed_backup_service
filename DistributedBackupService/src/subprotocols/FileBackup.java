@@ -38,7 +38,7 @@ public class FileBackup extends Thread {
 		 * esperar por respostas
 		 * verificar nr de respostas e informacao
 		 */
-	
+
 		try {
 			File f = new File(filename);
 			FileSplitter.split(filename);
@@ -56,7 +56,6 @@ public class FileBackup extends Thread {
 
 			for(int chunknr=0; chunknr<numberChunkParts; chunknr++)
 			{
-				// open the file
 				String chunkFilename = filename+"."+chunknr;
 				byte[] body = Files.readAllBytes(Paths.get(chunkFilename));
 
@@ -79,10 +78,12 @@ public class FileBackup extends Thread {
 						System.out.println("Chunk sucessfully backed up in "+storedsNr+" peers!");
 						repdegReached=true;
 					}
-					else {
+					else
+					{
 						attempts--;
 						waitTime*=2;
 					}
+					Peer.resetStoredMessagesList();
 				}			
 
 			}

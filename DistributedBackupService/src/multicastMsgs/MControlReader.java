@@ -10,8 +10,7 @@ import Peer.StoredtypeMessage;
 public class MControlReader extends MulticastChannelMsg {
 
 	public MControlReader(String adr, int port) throws IOException {
-		super(adr, port);
-
+		super(adr, port); //TODO change to Definitions. ... ? (& same other mchannels)
 	}
 
 	public void processPacket(DatagramPacket packet) {
@@ -22,7 +21,6 @@ public class MControlReader extends MulticastChannelMsg {
 		System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
-		System.out.println("O comando: " + cmd);
 
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
@@ -30,7 +28,7 @@ public class MControlReader extends MulticastChannelMsg {
 				Peer.addStoredMessage(storedmsg);
 			}
 		}
-		else if(cmd.equals("GETCHUNK")){
+		else if(cmd.equals("GETCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
 				//lanca thread p restore
 			}
@@ -43,7 +41,6 @@ public class MControlReader extends MulticastChannelMsg {
 	}
 	@Override
 	public void processMsg(String msg) {
-
 	}
 
 	public Boolean verifyVersion(String version) {

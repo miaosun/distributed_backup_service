@@ -10,7 +10,6 @@ public class MDBackupMsg extends MulticastChannelMsg {
 
 	String body;
 	String fileID="";
-	boolean initiatorPeer;
 	int replicationDegree=0;
 
 	//MDB Reader
@@ -51,6 +50,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		if(cmd.equals("PUTCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
 				System.out.println("PEDIDO PUTCHUNK RECEBIDO!");
+				//TODO verificar se ainda n tem o ficheiro
 				//TODO lançar thread p guardar chunk e responder stored p MC
 				//lancar thread p guardar chunk e responder stored p MC
 			}
@@ -59,7 +59,6 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		{
 			System.out.println("MESSAGE IGNORED");
 		}
-
 	}
 
 	public Boolean verifyVersion(String version) {
