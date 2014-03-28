@@ -12,6 +12,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
 import java.util.Scanner;
 
@@ -36,7 +38,7 @@ public class FileBackup extends Thread {
 		 * esperar por respostas
 		 * verificar nr de respostas e informacao
 		 */
-
+	
 		try {
 			File f = new File(filename);
 			FileSplitter.split(filename);
@@ -56,18 +58,14 @@ public class FileBackup extends Thread {
 			{
 				// open the file
 				String chunkFilename = filename+"."+chunknr;
-				BufferedInputStream in = new BufferedInputStream(new FileInputStream(chunkFilename));
-				byte[] body = new byte[64000];
-				in.read(body,0,64000);
-				in.close();
-				System.out.println("here");
+				byte[] body = Files.readAllBytes(Paths.get(chunkFilename));
 
 				long waitTime = 500;
 				int attempts = 5;
 				boolean repdegReached=false;
 				while(attempts>0 && !repdegReached){ //nr tentativas < 5 & nao atingido nr desejado de stored's
 					System.out.println("Sending chunk...");
-					bMsg.putchunkSend(chunknr, body.toString());
+					bMsg.putchunkSend(chunknr, body);
 
 					try {
 						Thread.sleep(waitTime);
@@ -76,7 +74,7 @@ public class FileBackup extends Thread {
 					}
 
 					//TODO verificar se ja se obteve nr desejado de respostas, se sim repdegReached = true
-					int storedsNr = Peer.getInstance().getStoredMessages().size();
+					int storedsNr = Peer.getStoredMessages().size();
 					if(storedsNr >= replicationDeg) {
 						System.out.println("Chunk sucessfully backed up in "+storedsNr+" peers!");
 						repdegReached=true;

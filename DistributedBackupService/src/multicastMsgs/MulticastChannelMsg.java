@@ -58,17 +58,16 @@ public abstract class MulticastChannelMsg extends Thread {
 			return packet;
 	}
 
-	public void sendPacket(String msg) {
+	public void sendPacket(byte[] buffer) {
 
 		try{
 			DatagramSocket socket = new DatagramSocket();
-			byte[] buffer = new byte[msg.length()];
-			buffer = msg.getBytes();
+			//byte[] buffer = new byte[msg.length()];
+			//buffer = msg.getBytes();
 
 			DatagramPacket sendPacket = new DatagramPacket(buffer, buffer.length, maddress, port);
 			socket.send(sendPacket);
 			socket.close();
-			System.out.println("Message sent: "+msg);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

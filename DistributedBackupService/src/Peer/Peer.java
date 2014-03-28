@@ -3,23 +3,21 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 import java.util.Scanner;
 
 import subprotocols.FileBackup;
-import utilities.FileSplitter;
 import multicastMsgs.MControlReader;
 import multicastMsgs.MDBackupMsg;
 
 
 public class Peer {
 	
-	public static Peer instance = null;
+//	public static Peer instance = null;
 	
 	static List<Chunk> backedupChunks;
 	//static HashMap<Chunk, int> backedupChunks;
@@ -32,7 +30,7 @@ public class Peer {
 	 */
 	public static void main(String[] args) throws IOException {
 
-		instance = new Peer();
+		//instance = new Peer();
 		
 		//Estruturas de Dados
 		backedupChunks = new ArrayList<Chunk>();
@@ -53,28 +51,28 @@ public class Peer {
 		menu();
 	}
 	
-	public static Peer getInstance() {
-		return instance;
-	}
+//	public static Peer getInstance() {
+//		return instance;
+//	}
 	
-	public void addBackedupChunk(Chunk newchunk) {
+	public static void addBackedupChunk(Chunk newchunk) {
 		backedupChunks.add(newchunk);
 	}
-	public List<Chunk> getBackedupChunks() {
+	public static List<Chunk> getBackedupChunks() {
 		return backedupChunks;
 	}
 
-	public void addUserBackupRequest(String filename) {
+	public static void addUserBackupRequest(String filename) {
 		userBackupRequests.add(filename);
 	}
-	public Queue<String> getUserBackupRequests() {
+	public static Queue<String> getUserBackupRequests() {
 		return userBackupRequests;
 	}
 	
-	public void addStoredMessage(StoredtypeMessage storedmsg) {
+	public static void addStoredMessage(StoredtypeMessage storedmsg) {
 		storedMessages.add(storedmsg);
 	}
-	public List<StoredtypeMessage> getStoredMessages() {
+	public static List<StoredtypeMessage> getStoredMessages() {
 		return storedMessages;
 	}
 	
@@ -125,7 +123,7 @@ public class Peer {
 		{
 			System.out.print("filename: ");
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
-			String filename = inputStream.readLine();
+			String filename = Definitions.backupFilesDirectory+inputStream.readLine();
 			
 			File f = new File(filename);
 			if(f.exists() && !f.isDirectory()) //file exists //f.canRead() ? //f.isFile() ?

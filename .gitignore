@@ -1,3 +1,4 @@
 /.metadata
 *.class
 /backup_files
+DistributedBackupService/backup_files

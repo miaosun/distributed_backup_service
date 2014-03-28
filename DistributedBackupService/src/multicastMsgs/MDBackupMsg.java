@@ -26,12 +26,18 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		replicationDegree=repdegree;
 	}
 
-	public void putchunkSend(int chunkNR, String body) {
+	public void putchunkSend(int chunkNR, byte[] bodyInBytes) {
 		if(!initiatorPeer)
 			System.out.println("ERROR: not permited!");
 		else
 		{
-			String message = "PUTCHUNK"+" "+Definitions.version+" "+fileID+" "+chunkNR+" "+replicationDegree+Definitions.CRLF+Definitions.CRLF+body;
+			String stringHeader = "PUTCHUNK"+" "+Definitions.version+" "+fileID+" "+chunkNR+" "+replicationDegree;
+			System.out.println("\"BackupChunk Message sent: "+stringHeader+"\"");
+			System.out.println("BODY: "+bodyInBytes.length);
+			stringHeader+=Definitions.CRLF+Definitions.CRLF;
+			byte[] header = stringHeader.getBytes();
+			byte[] message = new byte[header.length+bodyInBytes.length];
+			System.arraycopy(bodyInBytes, 0, message, header.length, bodyInBytes.length);	
 			sendPacket(message);
 		}
 	}
