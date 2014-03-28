@@ -1,6 +1,11 @@
 package muticastMsgs;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+
+import Peer.Peer;
+import Peer.PeerAddress;
+import Peer.StoredtypeMessage;
 
 public class MControlReader extends MulticastChannelMsg {
 
@@ -9,9 +14,11 @@ public class MControlReader extends MulticastChannelMsg {
 
 	}
 
-	@Override
-	public void processMsg(String msg) {
-
+	public void processPacket(DatagramPacket packet) {
+		String msg = new String(packet.getData());
+		System.out.println("Message received: "+ msg);
+		PeerAddress peer = new PeerAddress(packet.getAddress(),packet.getPort());
+		
 		System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
@@ -19,8 +26,8 @@ public class MControlReader extends MulticastChannelMsg {
 
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
-				//...
-				//guarda estrutura dados
+				StoredtypeMessage storedmsg = new StoredtypeMessage(temp[2].trim(), Integer.parseInt(temp[3].trim()), peer);
+				Peer.getInstance().addStoredMessage(storedmsg);
 			}
 		}
 		else if(cmd.equals("GETCHUNK")){
@@ -32,6 +39,11 @@ public class MControlReader extends MulticastChannelMsg {
 		{
 			System.out.println("MESSAGE IGNORED");
 		}
+		
+	}
+	@Override
+	public void processMsg(String msg) {
+
 	}
 
 	public Boolean verifyVersion(String version) {
@@ -46,8 +58,13 @@ public class MControlReader extends MulticastChannelMsg {
 		System.out.println("Running MC Reader");
 		//ciclo leitura MC
 		while(true) {
-			String msg = receivePacket();
-			processMsg(msg);
+			try {
+				DatagramPacket packet = getPacket();
+				processPacket(packet);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 

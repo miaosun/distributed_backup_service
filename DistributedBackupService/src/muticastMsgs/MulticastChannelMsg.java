@@ -43,6 +43,13 @@ public abstract class MulticastChannelMsg extends Thread {
 		}
 		return "";
 	}
+	
+	public DatagramPacket getPacket() throws IOException {
+			byte[] data = new byte[1024];
+			DatagramPacket packet = new DatagramPacket(data,data.length);
+			msocket.receive(packet);
+			return packet;
+	}
 
 	public void sendPacket(String msg) {
 
@@ -60,6 +67,8 @@ public abstract class MulticastChannelMsg extends Thread {
 			e.printStackTrace();
 		}
 	}
+	
+	
 
 	public void processMsg(String msg) {
 	}

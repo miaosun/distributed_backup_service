@@ -1,4 +1,4 @@
-
+package Peer;
 
 public class StoredtypeMessage {
 	

@@ -1,3 +1,4 @@
+package Peer;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -14,9 +15,11 @@ import muticastMsgs.MDBackupMsg;
 
 
 public class Peer {
+	
+	public static Peer instance = null;
 
 	//MC Channel
-	public final static int mcPort = 1200;
+	public final static int mcPort = 1201;
 	public final static String mcAdr = new String("230.0.0.1"); //any class D address
 	
 	//MDB Channel
@@ -24,9 +27,10 @@ public class Peer {
 	public final static String mdbAdr = new String("230.0.0.2"); //any class D address
 	
 	//MDR Channel
+	//...
 	
 	static List<Chunk> backedupChunks;
-	static Queue<String> backupRequests; //String: filename
+	static Queue<String> userBackupRequests; //String: filename
 	static List<StoredtypeMessage> storedMessages;
 	/**
 	 * @param args
@@ -34,11 +38,12 @@ public class Peer {
 	 */
 	public static void main(String[] args) throws IOException {
 
+		instance = new Peer();
+		
 		//Estruturas de Dados
 		backedupChunks = new ArrayList<Chunk>();
-		backupRequests = new LinkedList<String>();
+		userBackupRequests = new LinkedList<String>();
 		storedMessages = new ArrayList<StoredtypeMessage>();
-		
 		
 		//TODO fazer set dos enderecos multicast e portos??
 		
@@ -53,7 +58,32 @@ public class Peer {
 		
 		menu();
 	}
+	
+	public static Peer getInstance() {
+		return instance;
+	}
+	
+	public void addBackedupChunk(Chunk newchunk) {
+		backedupChunks.add(newchunk);
+	}
+	public List<Chunk> getBackedupChunks() {
+		return backedupChunks;
+	}
 
+	public void addUserBackupRequest(String filename) {
+		userBackupRequests.add(filename);
+	}
+	public Queue<String> getUserBackupRequests() {
+		return userBackupRequests;
+	}
+	
+	public void addStoredMessage(StoredtypeMessage storedmsg) {
+		storedMessages.add(storedmsg);
+	}
+	public List<StoredtypeMessage> getStoredMessages() {
+		return storedMessages;
+	}
+	
 	private static void menu() throws IOException {
 
 		@SuppressWarnings("resource")
