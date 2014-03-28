@@ -31,21 +31,20 @@ public class MDBackupMsg extends MulticastChannelMsg {
 			System.out.println("ERROR: not permited!");
 		else
 		{
-			String message = "PUTCHUNK"+" "+Definitions.version+" "+fileID+" "+chunkNR+" "+replicationDegree+" "+Definitions.CRLF+Definitions.CRLF+body;
+			String message = "PUTCHUNK"+" "+Definitions.version+" "+fileID+" "+chunkNR+" "+replicationDegree+Definitions.CRLF+Definitions.CRLF+body;
 			sendPacket(message);
 		}
 	}
 
 	@Override
 	public void processMsg(String msg) {
-		System.out.println("Process Backup Message");
+		System.out.println("> Process Backup Message Received!");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
-		System.out.println("O commando: " + cmd);
 
 		if(cmd.equals("PUTCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
-				System.out.println("PUTCHUNK RECEBIDO!");
+				System.out.println("PEDIDO PUTCHUNK RECEBIDO!");
 				//TODO lançar thread p guardar chunk e responder stored p MC
 				//lancar thread p guardar chunk e responder stored p MC
 			}
@@ -72,7 +71,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		{
 			joinMulticastGroup();
 			while(true) {
-				System.out.println("MDB thread waiting for putchunk messages");
+				System.out.println("MDB thread waiting for putchunk messages...");
 				String msg = receivePacket();
 				processMsg(msg);
 			}

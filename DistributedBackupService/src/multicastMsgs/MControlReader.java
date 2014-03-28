@@ -32,7 +32,7 @@ public class MControlReader extends MulticastChannelMsg {
 		}
 		else if(cmd.equals("GETCHUNK")){
 			if(verifyVersion(temp[1].trim())) {
-				//lan�a thread p restore
+				//lanca thread p restore
 			}
 		}
 		else
@@ -55,8 +55,9 @@ public class MControlReader extends MulticastChannelMsg {
 	}
 
 	public void run() {
-		System.out.println("Running MC Reader");
+		System.out.println("Running MC Reader...");
 		//ciclo leitura MC
+		joinMulticastGroup();
 		while(true) {
 			try {
 				DatagramPacket packet = getPacket();

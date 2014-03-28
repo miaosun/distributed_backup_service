@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -20,6 +22,7 @@ public class Peer {
 	public static Peer instance = null;
 	
 	static List<Chunk> backedupChunks;
+	//static HashMap<Chunk, int> backedupChunks;
 	static Queue<String> userBackupRequests; //String: filename
 	static List<StoredtypeMessage> storedMessages;
 	
@@ -46,7 +49,7 @@ public class Peer {
 		//lançar thread ler MDB
 		MDBackupMsg mdb = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT);
 		mdb.start();
-		//FileSplitter.split("test.pdf");
+		
 		menu();
 	}
 	
@@ -93,7 +96,7 @@ public class Peer {
 			switch (selection){
 
 			case 1: 
-				System.out.println("Message: ");
+				System.out.println("*Backup file*");
 				backupRequest();
 				break;
 
@@ -120,16 +123,22 @@ public class Peer {
 		Boolean b = true;
 		while(b)
 		{
-			System.out.println("filename: ");
+			System.out.print("filename: ");
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
 			String filename = inputStream.readLine();
 			
 			File f = new File(filename);
-			if(f.exists() && !f.isDirectory())
+			if(f.exists() && !f.isDirectory()) //file exists //f.canRead() ? //f.isFile() ?
 			{
 				b = false;
 				FileBackup backup = new FileBackup(filename);
-				backup.start();	
+				backup.start();
+				try {
+					backup.join(); //espera que thread termine
+				} catch (InterruptedException e) {
+					System.out.println("Exception: another thread has interrupted the current thread");
+					e.printStackTrace();
+				}
 			}
 			else
 				System.out.println("File not exists, try again!\n");

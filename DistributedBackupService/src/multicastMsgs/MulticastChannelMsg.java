@@ -29,6 +29,7 @@ public abstract class MulticastChannelMsg extends Thread {
 		try {
 			msocket.joinGroup(maddress);
 			msocket.setTimeToLive(1);
+			msocket.setLoopbackMode(true);
 		} catch (IOException e) {
 			System.out.println("ERROR multicast joinGroup");
 			e.printStackTrace();
@@ -61,7 +62,6 @@ public abstract class MulticastChannelMsg extends Thread {
 
 		try{
 			DatagramSocket socket = new DatagramSocket();
-
 			byte[] buffer = new byte[msg.length()];
 			buffer = msg.getBytes();
 

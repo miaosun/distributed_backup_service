@@ -45,7 +45,7 @@ public class FileSplitter
 				// load one byte from the input file and write it to the output file
 				out.write(in.read());
 			}
-			System.out.println(subfile);
+			//System.out.println(subfile);
 			// close the file
 			out.close();
 		}
@@ -67,6 +67,7 @@ public class FileSplitter
 
 		// close the file
 		in.close();
+		System.out.println("File splitted in "+(subfile+1)+" subfiles. (0 to "+subfile+")");
 	}
 
 	/**
