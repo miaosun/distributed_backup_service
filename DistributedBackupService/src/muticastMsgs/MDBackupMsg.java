@@ -26,7 +26,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		replicationDegree=repdegree;
 	}
 
-	private void putchunkSend(int chunkNR, String body) {
+	public void putchunkSend(int chunkNR, String body) {
 		if(!initiatorPeer)
 			System.out.println("ERROR: not permited!");
 		else
@@ -38,8 +38,6 @@ public class MDBackupMsg extends MulticastChannelMsg {
 
 	@Override
 	public void processMsg(String msg) {
-		// TODO Auto-generated method stub
-
 		System.out.println("Process Backup Message");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
@@ -47,8 +45,13 @@ public class MDBackupMsg extends MulticastChannelMsg {
 
 		if(cmd.equals("PUTCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
-				//lançar thread p guardar chunk e responder stored p MC
+				System.out.println("PUTCHUNK RECEBIDO!");
+				//TODO lançar thread p guardar chunk e responder stored p MC
 			}
+		}
+		else
+		{
+			System.out.println("MESSAGE IGNORED");
 		}
 
 	}
@@ -66,8 +69,12 @@ public class MDBackupMsg extends MulticastChannelMsg {
 	public void run() {
 		if(!initiatorPeer)  //MDB Reader
 		{
-			String msg = receivePacket();
-			processMsg(msg);
+			joinMulticastGroup();
+			while(true) {
+				System.out.println("MDB thread waiting for putchunk messages");
+				String msg = receivePacket();
+				processMsg(msg);
+			}
 		}
 	}
 }

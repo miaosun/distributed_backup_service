@@ -8,33 +8,39 @@ import muticastMsgs.MDBackupMsg;
 public class FileBackup extends Thread {
 
 	String filename;
-	
+
 	public FileBackup(String filename) {
 		this.filename=filename;
 	}
-	
+
 	public void run() {
 		/*
-		* TODO
-		* Split do ficheiro
-		* ciclo enviar ficheiro chunk a chunk (através de MDbackupmsg)
-		* esperar por respostas
-		* verificar nr de respostas e informação
-		*/
-		
+		 * TODO
+		 * Split do ficheiro
+		 * ciclo enviar ficheiro chunk a chunk (através de MDbackupmsg)
+		 * esperar por respostas
+		 * verificar nr de respostas e informação
+		 */
+
 		try {
-			MDBackupMsg putchunk = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT);
-			
-			
-			
+			int n=5;
+			while(n>0){
+				MDBackupMsg putchunk = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT, "file", 1);
+				putchunk.putchunkSend(n, "ola");
+				n--;
+				Thread.sleep(3000);
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-		
+
+
 	}
-	
+
 }
 
 

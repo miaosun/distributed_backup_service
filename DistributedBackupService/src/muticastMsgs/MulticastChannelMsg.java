@@ -24,6 +24,16 @@ public abstract class MulticastChannelMsg extends Thread {
 	public void listen() throws IOException {
 		msocket.joinGroup(maddress);
 	}
+	
+	public void joinMulticastGroup() {
+		try {
+			msocket.joinGroup(maddress);
+			msocket.setTimeToLive(1);
+		} catch (IOException e) {
+			System.out.println("ERROR multicast joinGroup");
+			e.printStackTrace();
+		}
+	}
 
 
 	public String receivePacket() {
@@ -58,13 +68,11 @@ public abstract class MulticastChannelMsg extends Thread {
 			DatagramPacket sendPacket = new DatagramPacket(buffer, buffer.length, maddress, port);
 			socket.send(sendPacket);
 			socket.close();
-			System.out.println("Message sent.");
+			System.out.println("Message sent: "+msg);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	
 
 	public void processMsg(String msg) {
 	}
