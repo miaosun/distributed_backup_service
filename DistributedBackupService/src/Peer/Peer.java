@@ -1,5 +1,6 @@
 package Peer;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -9,9 +10,9 @@ import java.util.Queue;
 import java.util.Scanner;
 
 import subprotocols.FileBackup;
-
-import muticastMsgs.MControlReader;
-import muticastMsgs.MDBackupMsg;
+import utilities.FileSplitter;
+import multicastMsgs.MControlReader;
+import multicastMsgs.MDBackupMsg;
 
 
 public class Peer {
@@ -45,7 +46,7 @@ public class Peer {
 		//lançar thread ler MDB
 		MDBackupMsg mdb = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT);
 		mdb.start();
-		
+		//FileSplitter.split("test.pdf");
 		menu();
 	}
 	
@@ -116,15 +117,24 @@ public class Peer {
 
 
 	private static void backupRequest() throws IOException {
+		Boolean b = true;
+		while(b)
+		{
+			System.out.println("filename: ");
+			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
+			String filename = inputStream.readLine();
+			
+			File f = new File(filename);
+			if(f.exists() && !f.isDirectory())
+			{
+				b = false;
+				FileBackup backup = new FileBackup(filename);
+				backup.start();	
+			}
+			else
+				System.out.println("File not exists, try again!\n");
+		}
 		
-		System.out.println("filename: ");
-		BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
-		String filename = inputStream.readLine();
-		
-		//TODO verificar se ficheiro existe!
-		
-		FileBackup backup = new FileBackup(filename);
-		backup.start();
 	}
 
 }

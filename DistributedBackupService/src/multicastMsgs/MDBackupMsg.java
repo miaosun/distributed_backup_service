@@ -1,4 +1,4 @@
-package muticastMsgs;
+package multicastMsgs;
 
 import java.io.IOException;
 
@@ -47,6 +47,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 			if(verifyVersion(temp[1].trim())) {
 				System.out.println("PUTCHUNK RECEBIDO!");
 				//TODO lançar thread p guardar chunk e responder stored p MC
+				//lancar thread p guardar chunk e responder stored p MC
 			}
 		}
 		else
