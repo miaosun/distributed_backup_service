@@ -1,5 +1,10 @@
 package subprotocols;
 
+import java.io.IOException;
+
+import Peer.Definitions;
+import muticastMsgs.MDBackupMsg;
+
 public class FileBackup extends Thread {
 
 	String filename;
@@ -11,12 +16,23 @@ public class FileBackup extends Thread {
 	public void run() {
 		/*
 		* TODO
-		*
 		* Split do ficheiro
 		* ciclo enviar ficheiro chunk a chunk (através de MDbackupmsg)
 		* esperar por respostas
 		* verificar nr de respostas e informação
 		*/
+		
+		try {
+			MDBackupMsg putchunk = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT);
+			
+			
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 	}
 	
 }

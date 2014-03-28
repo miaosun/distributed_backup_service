@@ -7,10 +7,6 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 
 public abstract class MulticastChannelMsg extends Thread {
-
-	byte[] CRLFseq = {0xD, 0xA};
-	String CRLF = new String(CRLFseq);
-	String version = "1.0";
 	
 	public int port;
 	public String adr;

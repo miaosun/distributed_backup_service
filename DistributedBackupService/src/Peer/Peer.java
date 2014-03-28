@@ -17,21 +17,11 @@ import muticastMsgs.MDBackupMsg;
 public class Peer {
 	
 	public static Peer instance = null;
-
-	//MC Channel
-	public final static int mcPort = 1201;
-	public final static String mcAdr = new String("230.0.0.1"); //any class D address
-	
-	//MDB Channel
-	public final static int mdbPort = 1200;
-	public final static String mdbAdr = new String("230.0.0.2"); //any class D address
-	
-	//MDR Channel
-	//...
 	
 	static List<Chunk> backedupChunks;
 	static Queue<String> userBackupRequests; //String: filename
 	static List<StoredtypeMessage> storedMessages;
+	
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -49,11 +39,11 @@ public class Peer {
 		
 		
 		//lançar thread ler MC
-		MControlReader mc = new MControlReader(mcAdr, mcPort);
+		MControlReader mc = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
 		mc.start();
 		
 		//lançar thread ler MDB
-		MDBackupMsg mdb = new MDBackupMsg(mdbAdr, mdbPort);
+		MDBackupMsg mdb = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT);
 		mdb.start();
 		
 		menu();

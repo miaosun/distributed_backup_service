@@ -2,6 +2,8 @@ package muticastMsgs;
 
 import java.io.IOException;
 
+import Peer.Definitions;
+
 
 //MDB Reader
 public class MDBackupMsg extends MulticastChannelMsg {
@@ -29,7 +31,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 			System.out.println("ERROR: not permited!");
 		else
 		{
-			String message = "PUTCHUNK"+" "+version+" "+fileID+" "+chunkNR+" "+replicationDegree+" "+CRLF+CRLF+body;
+			String message = "PUTCHUNK"+" "+Definitions.version+" "+fileID+" "+chunkNR+" "+replicationDegree+" "+Definitions.CRLF+Definitions.CRLF+body;
 			sendPacket(message);
 		}
 	}
