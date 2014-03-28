@@ -1,3 +1,4 @@
+package utilities;
 import java.io.*;
 
 /**
@@ -44,7 +45,7 @@ public class FileSplitter
 				// load one byte from the input file and write it to the output file
 				out.write(in.read());
 			}
-
+			System.out.println(subfile);
 			// close the file
 			out.close();
 		}
@@ -95,7 +96,7 @@ public class FileSplitter
 	/**
 	 * find out how many chunks there are to the base filename
 	 */
-	private static int getNumberParts(String baseFilename) throws IOException
+	public static int getNumberParts(String baseFilename) throws IOException
 	{
 		// list all files in the same directory
 		File directory = new File(baseFilename).getAbsoluteFile().getParentFile();

@@ -1,4 +1,4 @@
-package muticastMsgs;
+package multicastMsgs;
 
 import java.io.IOException;
 
@@ -25,7 +25,7 @@ public class MControlReader extends MulticastChannelMsg {
 		}
 		else if(cmd.equals("GETCHUNK")){
 			if(verifyVersion(temp[1].trim())) {
-				//lança thread p restore
+				//lanï¿½a thread p restore
 			}
 		}
 		else
