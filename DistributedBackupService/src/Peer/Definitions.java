@@ -17,4 +17,6 @@ public class Definitions {
 		public final static byte[] CRLFseq = {0xD, 0xA};
 		public final static String CRLF = new String(CRLFseq);
 		public final static String version = "1.0";
+		
+		public final static String backupFilesDirectory = "backup_files/";
 }
