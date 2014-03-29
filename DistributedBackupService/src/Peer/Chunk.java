@@ -19,6 +19,7 @@ public class Chunk {
 	
 	public void saveChunk(byte[] data) throws IOException {
 		
+		System.out.println("Saving Chunk: "+fileID+" "+chunkNR);
 		//guardar ficheiro
 		FileOutputStream fos = new FileOutputStream(Definitions.backupFilesDirectory+this.fileID+"."+this.chunkNR);
 		fos.write(data);

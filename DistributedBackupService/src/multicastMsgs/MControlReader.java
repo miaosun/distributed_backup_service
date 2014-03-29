@@ -25,6 +25,7 @@ public class MControlReader extends MulticastChannelMsg {
 		String msg = new String(packet.getData());
 		System.out.println("Message received: "+ msg);
 		PeerAddress peer = new PeerAddress(packet.getAddress(),packet.getPort());
+		System.out.println("Peer: "+packet.getAddress()+"  "+packet.getPort());
 		
 		System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
