@@ -1,7 +1,9 @@
 package multicastMsgs;
 
 import java.io.IOException;
+import java.util.Random;
 
+import Peer.Chunk;
 import Peer.Definitions;
 
 
@@ -12,7 +14,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 	String fileID="";
 	int replicationDegree=0;
 
-	//MDB Reader
+	//MDB Reader constructor
 	public MDBackupMsg(String adr, int port) throws IOException {
 		super(adr, port);
 		initiatorPeer=false;
@@ -46,13 +48,30 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		System.out.println("> Process Backup Message Received!");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
+		Random random = new Random();
 
 		if(cmd.equals("PUTCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
 				System.out.println("PEDIDO PUTCHUNK RECEBIDO!");
-				//TODO verificar se ainda n tem o ficheiro
-				//TODO lançar thread p guardar chunk e responder stored p MC
-				//lancar thread p guardar chunk e responder stored p MC
+				Chunk ch = new Chunk(temp[2].trim(), Integer.parseInt(temp[3].trim()), Integer.parseInt(temp[4].trim()));
+				
+				//verificar se ainda n tem o ficheiro //TODO verificar
+				if(!ch.exists())
+				{
+					//waits timeout time before sending STORED message
+					int timeout = random.nextInt(401);
+					try {
+						Thread.sleep(timeout);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					
+					//enviar stored
+					
+					//guardar chunk
+					//ch.saveChunk(data); TODO
+				}
 			}
 		}
 		else
@@ -68,7 +87,6 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		else
 			return false;
 	}
-
 
 
 	public void run() {
