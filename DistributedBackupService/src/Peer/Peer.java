@@ -64,10 +64,13 @@ public class Peer {
 
 	public static void addtoStoredsInfo(Chunk ch, PeerAddress p) {
 		if(storedsInfo.containsKey(ch)) {
-			//ArrayList<PeerAddress> peerList = storedsInfo.get(ch);
+
+			ArrayList<PeerAddress> peerList = storedsInfo.get(ch);
+
 			if(!storedsInfo.get(ch).contains(p)) {
 				storedsInfo.get(ch).add(p);
 			}
+			storedsInfo.put(ch, peerList);
 		}
 		else {
 			ArrayList<PeerAddress> plist = new ArrayList<PeerAddress>();
@@ -77,10 +80,12 @@ public class Peer {
 	}
 	
 	public static int getStoredsNr(Chunk ch) {
-		if(storedsInfo.containsKey(ch))
+		if(storedsInfo.containsKey(ch)) {
 			return (storedsInfo.get(ch)).size();
+		}
 		else
 			return 0;
+
 	}
 	
 	private static void menu() throws IOException {
