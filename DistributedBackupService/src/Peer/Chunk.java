@@ -22,16 +22,19 @@ public class Chunk {
 	public void saveChunk(byte[] data) throws IOException {
 		
 		//guardar ficheiro
+		System.out.println("TEST DATA: "+data.length);
 		FileOutputStream fos = new FileOutputStream(Definitions.backupFilesDirectory+this.fileID+"."+this.chunkNR);
 		fos.write(data);
 		fos.close();
+
 		//guardar chunk no hashmap/list
 		Peer.addBackedupChunk(this);
+		
+		System.out.println("TEST: "+Peer.backedupChunks.size());
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		System.out.println("at equals chunk");
 		if ( obj instanceof Chunk && ((this.fileID).equals( ((Chunk)obj).fileID)) && ((this.chunkNR) == ((Chunk)obj).chunkNR) )
 			return true;
 		else

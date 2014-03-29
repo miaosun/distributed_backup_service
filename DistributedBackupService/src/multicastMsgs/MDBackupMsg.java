@@ -1,11 +1,9 @@
 package multicastMsgs;
-
 import java.io.IOException;
 import java.util.Random;
 
 import Peer.Chunk;
 import Peer.Definitions;
-
 
 //MDB Reader
 public class MDBackupMsg extends MulticastChannelMsg {
@@ -34,29 +32,70 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		{
 			String stringHeader = "PUTCHUNK"+" "+Definitions.version+" "+fileID+" "+chunkNR+" "+replicationDegree;
 			System.out.println("\"BackupChunk Message sent: "+stringHeader+"\"");
-			System.out.println("BODY: "+bodyInBytes.length);
 			stringHeader+=Definitions.CRLF+Definitions.CRLF;
 			byte[] header = stringHeader.getBytes();
 			byte[] message = new byte[header.length+bodyInBytes.length];
 			System.arraycopy(header, 0, message, 0, header.length);
 			System.arraycopy(bodyInBytes, 0, message, header.length, bodyInBytes.length);	
 			sendPacket(message);
+			
+			System.out.println("MESSAGE111 TEST: "+message.length);
 		}
 	}
 
 	@Override
-	public void processMsg(String msg) {
+	public void processMsg(String msg) {}
+
+	public Boolean verifyVersion(String version) {
+		if(version.length()==3 && version.substring(1,2).equals(".") && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
+			return true;
+		}
+		else
+			return false;
+	}
+
+
+	public void run() {
+		if(!initiatorPeer)  //MDB Reader
+		{
+			joinMulticastGroup();
+			while(true) {
+				System.out.println("MDB thread waiting for putchunk messages...");
+				//String msg = receivePacket();
+				
+				processMsg(receivePacketByte());
+			}
+		}
+	}
+
+	private void processMsg(byte[] msg) {
+		// TODO Auto-generated method stub
+		System.out.println("MESSAGE TEST: "+msg.length);
 		System.out.println("> Process Backup Message Received!");
-		String[] temp = msg.split(" ");
-		String cmd = temp[0].trim();
-		Random random = new Random();
 		
+		int offset = 0;
+		String header = "";
+		for(int i=0; i<msg.length; i++)
+		{
+			if(msg[i] == Definitions.CRLFseq[0] && msg[i+1] == Definitions.CRLFseq[1] && msg[i+2] == Definitions.CRLFseq[0] && msg[i+3] == Definitions.CRLFseq[1])
+			{
+				offset = i+4;
+				header = new String(msg, 0, i);
+				break;
+			}
+		}
+		
+		byte[] body = new byte[msg.length-offset];
+		System.arraycopy(msg, offset, body, 0, msg.length-offset);
+		
+		Random random = new Random();
+		String[] temp = header.split(" ");
+		String cmd = temp[0].trim();
 		String fileID = temp[2].trim();
 		int chunkNR = Integer.parseInt(temp[3].trim());
 		int replicationDeg = Integer.parseInt(temp[4].trim());
 
-		byte[] body = temp[7].getBytes();
-		
+		System.out.println("TEST BODY SIZE: "+body.length+"\n");
 		if(cmd.equals("PUTCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
 				System.out.println("PEDIDO PUTCHUNK RECEBIDO!");
@@ -65,6 +104,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 				//verificar se ainda n tem o ficheiro //TODO verificar
 				if(!ch.exists())
 				{
+
 					//waits timeout time before sending STORED message
 					int timeout = random.nextInt(401);
 					try {
@@ -83,10 +123,10 @@ public class MDBackupMsg extends MulticastChannelMsg {
 					} //TODO
 					
 					//enviar stored
-					String storedMsg = "STORED" + msg.substring(msg.indexOf(' '));
+					String storedMsg = "STORED" + header.substring(header.indexOf(' ')) + Definitions.CRLF + Definitions.CRLF;
 					try {
 						MControlReader MC = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
-						MC.getMessege(storedMsg);
+						MC.sendMessages(storedMsg);
 					} catch (IOException e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
@@ -97,27 +137,6 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		else
 		{
 			System.out.println("MESSAGE IGNORED");
-		}
-	}
-
-	public Boolean verifyVersion(String version) {
-		if(version.length()==3 && version.substring(1,2).equals('.') && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
-			return true;
-		}
-		else
-			return false;
-	}
-
-
-	public void run() {
-		if(!initiatorPeer)  //MDB Reader
-		{
-			joinMulticastGroup();
-			while(true) {
-				System.out.println("MDB thread waiting for putchunk messages...");
-				String msg = receivePacket();
-				processMsg(msg);
-			}
 		}
 	}
 }

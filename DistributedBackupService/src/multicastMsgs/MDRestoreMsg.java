@@ -25,7 +25,7 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 	}
 	
 	public Boolean verifyVersion(String version) {
-		if(version.length()==3 && version.substring(1,2).equals('.') && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
+		if(version.length()==3 && version.substring(1,2).equals(".") && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
 			return true;
 		}
 		else

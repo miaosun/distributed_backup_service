@@ -15,8 +15,8 @@ public class MControlReader extends MulticastChannelMsg {
 		super(adr, port); //TODO change to Definitions. ... ? (& same other mchannels)
 	}
 	
-	public void getMessege(String msg) {
-		this.msg = msg;
+	public void sendMessages(String msg) {
+		sendPacket(msg.getBytes());
 	}
 
 	public void processPacket(DatagramPacket packet) {
@@ -53,7 +53,7 @@ public class MControlReader extends MulticastChannelMsg {
 	
 
 	public Boolean verifyVersion(String version) {
-		if(version.length()==3 && version.substring(1,2).equals('.') && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
+		if(version.length()==3 && version.substring(1,2).equals(".") && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
 			return true;
 		}
 		else

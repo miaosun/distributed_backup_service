@@ -30,7 +30,7 @@ public abstract class MulticastChannelMsg extends Thread {
 		try {
 			msocket.joinGroup(maddress);
 			msocket.setTimeToLive(1);
-			msocket.setLoopbackMode(true);
+			//msocket.setLoopbackMode(true);
 		} catch (IOException e) {
 			System.out.println("ERROR multicast joinGroup");
 			e.printStackTrace();
@@ -40,16 +40,31 @@ public abstract class MulticastChannelMsg extends Thread {
 
 	public String receivePacket() {
 		try{
-			byte[] data = new byte[1024];
+			byte[] data = new byte[64085];
 			DatagramPacket packet = new DatagramPacket(data,data.length);
 			msocket.receive(packet);
-			String msg = new String(packet.getData());
-			System.out.println("Message received: "+ msg);
+			data = packet.getData();
+
+			String msg = new String(data,0,30000);
+			System.out.println("GETDATA: "+data.length+"  "+msg.getBytes().length);
 			return msg;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return "";
+	}
+	
+	public byte[] receivePacketByte() {
+		try{
+			byte[] data = new byte[64085];
+			DatagramPacket packet = new DatagramPacket(data,data.length);
+			msocket.receive(packet);
+
+			return packet.getData();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	public DatagramPacket getPacket() throws IOException {
