@@ -70,9 +70,6 @@ public class MDBackupMsg extends MulticastChannelMsg {
 
 	private void processMsg(byte[] msg) {
 		// TODO Auto-generated method stub
-		System.out.println("MESSAGE TEST: "+msg.length);
-		System.out.println("> Process Backup Message Received!");
-		
 		int offset = 0;
 		String header = "";
 		for(int i=0; i<msg.length; i++)
@@ -85,6 +82,8 @@ public class MDBackupMsg extends MulticastChannelMsg {
 			}
 		}
 		
+		System.out.println("> Putchunk Received: " + header);
+		
 		byte[] body = new byte[msg.length-offset];
 		System.arraycopy(msg, offset, body, 0, msg.length-offset);
 		
@@ -95,16 +94,13 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		int chunkNR = Integer.parseInt(temp[3].trim());
 		int replicationDeg = Integer.parseInt(temp[4].trim());
 
-		System.out.println("TEST BODY SIZE: "+body.length+"\n");
 		if(cmd.equals("PUTCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
-				System.out.println("PEDIDO PUTCHUNK RECEBIDO!");
 				Chunk ch = new Chunk(fileID, chunkNR, replicationDeg);
 				
 				//verificar se ainda n tem o ficheiro //TODO verificar
 				if(!ch.exists())
 				{
-
 					//waits timeout time before sending STORED message
 					int timeout = random.nextInt(401);
 					try {

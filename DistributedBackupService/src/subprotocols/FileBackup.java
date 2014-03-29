@@ -30,15 +30,6 @@ public class FileBackup extends Thread {
 	}
 
 	public void run() {
-		/*
-		 * TODO
-		 *
-		 * Split do ficheiro
-		 * ciclo enviar ficheiro chunk a chunk (atraves de MDbackupmsg)
-		 * esperar por respostas
-		 * verificar nr de respostas e informacao
-		 */
-
 		try {
 			File f = new File(filename);
 			FileSplitter.split(filename);
