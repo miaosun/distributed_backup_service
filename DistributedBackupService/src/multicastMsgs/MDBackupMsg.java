@@ -38,6 +38,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 			stringHeader+=Definitions.CRLF+Definitions.CRLF;
 			byte[] header = stringHeader.getBytes();
 			byte[] message = new byte[header.length+bodyInBytes.length];
+			System.arraycopy(header, 0, message, 0, header.length);
 			System.arraycopy(bodyInBytes, 0, message, header.length, bodyInBytes.length);	
 			sendPacket(message);
 		}
@@ -49,11 +50,17 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
 		Random random = new Random();
+		
+		String fileID = temp[2].trim();
+		int chunkNR = Integer.parseInt(temp[3].trim());
+		int replicationDeg = Integer.parseInt(temp[4].trim());
 
+		byte[] body = temp[7].getBytes();
+		
 		if(cmd.equals("PUTCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
 				System.out.println("PEDIDO PUTCHUNK RECEBIDO!");
-				Chunk ch = new Chunk(temp[2].trim(), Integer.parseInt(temp[3].trim()), Integer.parseInt(temp[4].trim()));
+				Chunk ch = new Chunk(fileID, chunkNR, replicationDeg);
 				
 				//verificar se ainda n tem o ficheiro //TODO verificar
 				if(!ch.exists())
@@ -70,7 +77,12 @@ public class MDBackupMsg extends MulticastChannelMsg {
 					//enviar stored
 					
 					//guardar chunk
-					//ch.saveChunk(data); TODO
+					try {
+						ch.saveChunk(body);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					} //TODO
 				}
 			}
 		}

@@ -1,5 +1,8 @@
 package Peer;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class Chunk {
 
 	String fileID;
@@ -16,9 +19,14 @@ public class Chunk {
 		return Peer.getBackedupChunks().contains(this);	
 	}
 	
-	public void saveChunk(byte[] data) {
+	public void saveChunk(byte[] data) throws IOException {
+		
 		//guardar ficheiro
+		FileOutputStream fos = new FileOutputStream(Definitions.backupFilesDirectory+this.fileID+"."+this.chunkNR);
+		fos.write(data);
+		fos.close();
 		//guardar chunk no hashmap/list
+		Peer.addBackedupChunk(this);
 	}
 
 	@Override

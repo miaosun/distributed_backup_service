@@ -40,11 +40,11 @@ public class Peer {
 		//TODO fazer set dos enderecos multicast e portos??
 		
 		
-		//lançar thread ler MC
+		//lancar thread ler MC
 		MControlReader mc = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
 		mc.start();
 		
-		//lançar thread ler MDB
+		//lancar thread ler MDB
 		MDBackupMsg mdb = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT);
 		mdb.start();
 		
@@ -88,6 +88,7 @@ public class Peer {
 
 			System.out.println("Please Make a selection:"); 
 			System.out.println("[1] Send putchunk message"); 
+			System.out.println("[2] Restore a file:");
 			//System.out.println("[2] Receive putchunk message"); 
 			System.out.println("[3] exit"); 
 
@@ -102,8 +103,12 @@ public class Peer {
 				break;
 
 			case 2:
-				System.out.println("Nothing here.");
-				
+				System.out.println("*Restore file*");
+				//TODO porque Chunck restore e nao File restore? normalmente na utilidade o mais comum nao e fazer restore do ficheiro?
+				//     que sentido faz de fazer restore dum chunk? sendo assim, o utilizador escolha qual chunk quer fazer restore?
+				//     ou o utilizador especifica qual ficheiro quer fazer restore, e o programa verifica no disco local os chunks que faltam desse ficheiro e fazer restore desses chunks todos??
+				//     nao percebo esta parte...
+				restoreRequest();
 				break;
 
 			case 3:
@@ -124,7 +129,7 @@ public class Peer {
 		Boolean b = true;
 		while(b)
 		{
-			System.out.print("filename: ");
+			System.out.print("[BACKUP]filename: ");
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
 			String filename = Definitions.backupFilesDirectory+inputStream.readLine();
 			
@@ -145,6 +150,10 @@ public class Peer {
 				System.out.println("File not exists, try again!\n");
 		}
 		
+	}
+	
+	private static void restoreRequest() throws IOException {
+	
 	}
 
 }
