@@ -67,8 +67,8 @@ public class Peer {
 
 			ArrayList<PeerAddress> peerList = storedsInfo.get(ch);
 
-			if(!storedsInfo.get(ch).contains(p)) {
-				storedsInfo.get(ch).add(p);
+			if(!peerList.contains(p)) {
+				peerList.add(p);
 			}
 			storedsInfo.put(ch, peerList);
 		}
