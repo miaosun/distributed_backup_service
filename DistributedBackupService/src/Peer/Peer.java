@@ -18,7 +18,7 @@ public class Peer {
 	static List<Chunk> backedupChunks; // Arraylist com chunks armazenados
 	static HashMap<String, String> filesHash; // HashMap<filename,fileID>
 	//static Queue<String> userBackupRequests; //String: filename
-	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replicação
+	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replicaï¿½ï¿½o
 	//static List<StoredtypeMessage> storedMessages;
 	static HashMap<Chunk, ArrayList<PeerAddress>> storedsInfo; // informacao chunk->peers
 	
@@ -64,9 +64,9 @@ public class Peer {
 
 	public static void addtoStoredsInfo(Chunk ch, PeerAddress p) {
 		if(storedsInfo.containsKey(ch)) {
-			ArrayList<PeerAddress> peerList = storedsInfo.get(ch);
-			if(!peerList.contains(p)) {
-				peerList.add(p);
+			//ArrayList<PeerAddress> peerList = storedsInfo.get(ch);
+			if(!storedsInfo.get(ch).contains(p)) {
+				storedsInfo.get(ch).add(p);
 			}
 		}
 		else {
@@ -77,7 +77,10 @@ public class Peer {
 	}
 	
 	public static int getStoredsNr(Chunk ch) {
-		return (storedsInfo.get(ch)).size();
+		if(storedsInfo.containsKey(ch))
+			return (storedsInfo.get(ch)).size();
+		else
+			return 0;
 	}
 	
 	private static void menu() throws IOException {

@@ -38,8 +38,6 @@ public class MDBackupMsg extends MulticastChannelMsg {
 			System.arraycopy(header, 0, message, 0, header.length);
 			System.arraycopy(bodyInBytes, 0, message, header.length, bodyInBytes.length);	
 			sendPacket(message);
-			
-			System.out.println("MESSAGE111 TEST: "+message.length);
 		}
 	}
 
