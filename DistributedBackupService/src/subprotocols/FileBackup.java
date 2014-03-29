@@ -69,6 +69,7 @@ public class FileBackup extends Thread {
 					}
 					else
 					{
+						System.out.println("Waiting for more peers...");
 						attempts--;
 						waitTime*=2;
 					}
