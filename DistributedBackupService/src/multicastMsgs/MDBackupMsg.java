@@ -96,7 +96,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 
 		if(cmd.equals("PUTCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
-				Chunk ch = new Chunk(fileID, chunkNR, replicationDeg);
+				Chunk ch = new Chunk(fileID, chunkNR);
 				
 				//verificar se ainda n tem o ficheiro //TODO verificar
 				if(!ch.exists())

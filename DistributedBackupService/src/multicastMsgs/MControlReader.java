@@ -3,13 +3,14 @@ package multicastMsgs;
 import java.io.IOException;
 import java.net.DatagramPacket;
 
+import subprotocols.ChunkRestore;
+
+import Peer.Chunk;
 import Peer.Peer;
 import Peer.PeerAddress;
 import Peer.StoredtypeMessage;
 
 public class MControlReader extends MulticastChannelMsg {
-
-	private String msg;
 	
 	public MControlReader(String adr, int port) throws IOException {
 		super(adr, port); //TODO change to Definitions. ... ? (& same other mchannels)
@@ -21,8 +22,7 @@ public class MControlReader extends MulticastChannelMsg {
 
 	public void processPacket(DatagramPacket packet) {
 		
-		//String msg = new String(packet.getData());
-		this.msg = new String(packet.getData());
+		String msg = new String(packet.getData());
 		System.out.println("Message received: "+ msg);
 		PeerAddress peer = new PeerAddress(packet.getAddress(),packet.getPort());
 		
@@ -32,8 +32,8 @@ public class MControlReader extends MulticastChannelMsg {
 
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
-				StoredtypeMessage storedmsg = new StoredtypeMessage(temp[2].trim(), Integer.parseInt(temp[3].trim()), peer);
-				
+				Chunk ch = new Chunk(temp[2].trim(), Integer.parseInt(temp[3].trim()));
+				Peer.addtoStoredsInfo(ch, peer);
 			}
 		}
 		else if(cmd.equals("GETCHUNK")) {

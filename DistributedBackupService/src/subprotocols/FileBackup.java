@@ -3,15 +3,12 @@ package subprotocols;
 
 import java.io.IOException;
 
+import Peer.Chunk;
 import Peer.Definitions;
 import Peer.Peer;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.NoSuchAlgorithmException;
@@ -53,8 +50,8 @@ public class FileBackup extends Thread {
 				long waitTime = 500;
 				int attempts = 5;
 				boolean repdegReached=false;
+				Chunk ch = new Chunk(fileID, chunknr);
 				while(attempts>0 && !repdegReached){ //nr tentativas < 5 & nao atingido nr desejado de stored's
-					System.out.println("Sending chunk...");
 					bMsg.putchunkSend(chunknr, body);
 
 					try {
@@ -63,7 +60,7 @@ public class FileBackup extends Thread {
 						e.printStackTrace();
 					}
 
-					int storedsNr = Peer.getStoredMessages().size();
+					int storedsNr = Peer.getStoredsNr(ch);
 					//verificar se ja se obteve nr desejado de respostas, se sim repdegReached = true
 					if(storedsNr >= replicationDeg)
 					{
@@ -75,7 +72,6 @@ public class FileBackup extends Thread {
 						attempts--;
 						waitTime*=2;
 					}
-					Peer.resetStoredMessagesList();
 				}			
 
 			}

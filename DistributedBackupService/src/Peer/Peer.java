@@ -3,12 +3,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 import java.util.Scanner;
 
 import subprotocols.FileBackup;
@@ -38,7 +35,6 @@ public class Peer {
 		storedsInfo = new HashMap<Chunk, ArrayList<PeerAddress>>();
 		
 		//TODO fazer set dos enderecos multicast e portos??
-		
 		
 		//lancar thread ler MC
 		MControlReader mc = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
@@ -78,6 +74,10 @@ public class Peer {
 			plist.add(p);
 			storedsInfo.put(ch,plist);
 		}
+	}
+	
+	public static int getStoredsNr(Chunk ch) {
+		return (storedsInfo.get(ch)).size();
 	}
 	
 	private static void menu() throws IOException {

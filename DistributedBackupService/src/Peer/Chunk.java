@@ -8,7 +8,7 @@ public class Chunk {
 	String fileID;
 	int chunkNR;
 
-	public Chunk(String fileID, int chunkNR, int repDegree) {
+	public Chunk(String fileID, int chunkNR) {
 		this.fileID=fileID;
 		this.chunkNR=chunkNR;
 	}
