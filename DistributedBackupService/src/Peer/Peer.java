@@ -75,6 +75,9 @@ public class Peer {
 	public static List<StoredtypeMessage> getStoredMessages() {
 		return storedMessages;
 	}
+	public static void resetStoredMessagesList() {
+		storedMessages.clear();
+	}
 	
 	private static void menu() throws IOException {
 

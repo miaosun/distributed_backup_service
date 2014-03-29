@@ -38,7 +38,7 @@ public class FileBackup extends Thread {
 		 * esperar por respostas
 		 * verificar nr de respostas e informacao
 		 */
-	
+
 		try {
 			File f = new File(filename);
 			FileSplitter.split(filename);
@@ -54,9 +54,8 @@ public class FileBackup extends Thread {
 			MDBackupMsg bMsg = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT, fileID, replicationDeg);
 			System.out.println("MDBackup created");
 
-			for(int chunknr=0; chunknr<numberChunkParts; chunknr++)
+			for(int chunknr=0; chunknr < numberChunkParts; chunknr++)
 			{
-				// open the file
 				String chunkFilename = filename+"."+chunknr;
 				byte[] body = Files.readAllBytes(Paths.get(chunkFilename));
 
@@ -73,16 +72,19 @@ public class FileBackup extends Thread {
 						e.printStackTrace();
 					}
 
-					//TODO verificar se ja se obteve nr desejado de respostas, se sim repdegReached = true
 					int storedsNr = Peer.getStoredMessages().size();
-					if(storedsNr >= replicationDeg) {
+					//verificar se ja se obteve nr desejado de respostas, se sim repdegReached = true
+					if(storedsNr >= replicationDeg)
+					{
 						System.out.println("Chunk sucessfully backed up in "+storedsNr+" peers!");
 						repdegReached=true;
 					}
-					else {
+					else
+					{
 						attempts--;
 						waitTime*=2;
 					}
+					Peer.resetStoredMessagesList();
 				}			
 
 			}

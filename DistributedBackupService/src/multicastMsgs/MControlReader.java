@@ -10,11 +10,11 @@ import Peer.StoredtypeMessage;
 public class MControlReader extends MulticastChannelMsg {
 
 	public MControlReader(String adr, int port) throws IOException {
-		super(adr, port);
-
+		super(adr, port); //TODO change to Definitions. ... ? (& same other mchannels)
 	}
 
 	public void processPacket(DatagramPacket packet) {
+		
 		String msg = new String(packet.getData());
 		System.out.println("Message received: "+ msg);
 		PeerAddress peer = new PeerAddress(packet.getAddress(),packet.getPort());
@@ -22,7 +22,6 @@ public class MControlReader extends MulticastChannelMsg {
 		System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
-		System.out.println("O comando: " + cmd);
 
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
@@ -30,7 +29,7 @@ public class MControlReader extends MulticastChannelMsg {
 				Peer.addStoredMessage(storedmsg);
 			}
 		}
-		else if(cmd.equals("GETCHUNK")){
+		else if(cmd.equals("GETCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
 				//lanca thread p restore
 			}
@@ -41,10 +40,10 @@ public class MControlReader extends MulticastChannelMsg {
 		}
 		
 	}
+	
 	@Override
-	public void processMsg(String msg) {
-
-	}
+	public void processMsg(String msg) {}
+	
 
 	public Boolean verifyVersion(String version) {
 		if(version.length()==3 && version.substring(1,2).equals('.') && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
