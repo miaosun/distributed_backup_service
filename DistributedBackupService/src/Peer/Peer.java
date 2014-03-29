@@ -104,10 +104,6 @@ public class Peer {
 
 			case 2:
 				System.out.println("*Restore file*");
-				//TODO porque Chunck restore e nao File restore? normalmente na utilidade o mais comum nao e fazer restore do ficheiro?
-				//     que sentido faz de fazer restore dum chunk? sendo assim, o utilizador escolha qual chunk quer fazer restore?
-				//     ou o utilizador especifica qual ficheiro quer fazer restore, e o programa verifica no disco local os chunks que faltam desse ficheiro e fazer restore desses chunks todos??
-				//     nao percebo esta parte...
 				restoreRequest();
 				break;
 
@@ -153,7 +149,7 @@ public class Peer {
 	}
 	
 	private static void restoreRequest() throws IOException {
-
+		
 	}
 
 }

@@ -30,7 +30,7 @@ public abstract class MulticastChannelMsg extends Thread {
 		try {
 			msocket.joinGroup(maddress);
 			msocket.setTimeToLive(1);
-			//msocket.setLoopbackMode(true);
+			msocket.setLoopbackMode(true);
 		} catch (IOException e) {
 			System.out.println("ERROR multicast joinGroup");
 			e.printStackTrace();
