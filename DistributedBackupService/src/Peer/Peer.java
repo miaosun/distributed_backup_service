@@ -40,11 +40,11 @@ public class Peer {
 		//TODO fazer set dos enderecos multicast e portos??
 		
 		
-		//lançar thread ler MC
+		//lancar thread ler MC
 		MControlReader mc = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
 		mc.start();
 		
-		//lançar thread ler MDB
+		//lancar thread ler MDB
 		MDBackupMsg mdb = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT);
 		mdb.start();
 		

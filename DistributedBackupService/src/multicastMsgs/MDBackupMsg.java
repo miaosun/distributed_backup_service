@@ -37,6 +37,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 			stringHeader+=Definitions.CRLF+Definitions.CRLF;
 			byte[] header = stringHeader.getBytes();
 			byte[] message = new byte[header.length+bodyInBytes.length];
+			System.arraycopy(header, 0, message, 0, header.length);
 			System.arraycopy(bodyInBytes, 0, message, header.length, bodyInBytes.length);	
 			sendPacket(message);
 		}
@@ -51,7 +52,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		if(cmd.equals("PUTCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
 				System.out.println("PEDIDO PUTCHUNK RECEBIDO!");
-				//TODO lançar thread p guardar chunk e responder stored p MC
+				//TODO lancar thread p guardar chunk e responder stored p MC
 				//lancar thread p guardar chunk e responder stored p MC
 			}
 		}
