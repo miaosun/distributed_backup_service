@@ -9,13 +9,20 @@ import Peer.StoredtypeMessage;
 
 public class MControlReader extends MulticastChannelMsg {
 
+	private String msg;
+	
 	public MControlReader(String adr, int port) throws IOException {
 		super(adr, port); //TODO change to Definitions. ... ? (& same other mchannels)
+	}
+	
+	public void getMessege(String msg) {
+		this.msg = msg;
 	}
 
 	public void processPacket(DatagramPacket packet) {
 		
-		String msg = new String(packet.getData());
+		//String msg = new String(packet.getData());
+		this.msg = new String(packet.getData());
 		System.out.println("Message received: "+ msg);
 		PeerAddress peer = new PeerAddress(packet.getAddress(),packet.getPort());
 		

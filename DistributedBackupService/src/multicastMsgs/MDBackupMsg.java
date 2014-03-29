@@ -74,8 +74,6 @@ public class MDBackupMsg extends MulticastChannelMsg {
 						e.printStackTrace();
 					}
 					
-					//enviar stored
-					
 					//guardar chunk
 					try {
 						ch.saveChunk(body);
@@ -83,6 +81,16 @@ public class MDBackupMsg extends MulticastChannelMsg {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} //TODO
+					
+					//enviar stored
+					String storedMsg = "STORED" + msg.substring(msg.indexOf(' '));
+					try {
+						MControlReader MC = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
+						MC.getMessege(storedMsg);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
 				}
 			}
 		}
