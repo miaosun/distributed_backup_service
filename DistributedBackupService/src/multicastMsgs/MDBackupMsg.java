@@ -60,7 +60,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 			while(true) {
 				System.out.println("MDB thread waiting for putchunk messages...");
 				//String msg = receivePacket();
-				
+
 				processMsg(receivePacketByte());
 			}
 		}
@@ -79,12 +79,12 @@ public class MDBackupMsg extends MulticastChannelMsg {
 				break;
 			}
 		}
-		
+
 		System.out.println("> Putchunk Received: " + header);
-		
+
 		byte[] body = new byte[msg.length-offset];
 		System.arraycopy(msg, offset, body, 0, msg.length-offset);
-		
+
 		Random random = new Random();
 		String[] temp = header.split(" ");
 		String cmd = temp[0].trim();
@@ -95,19 +95,19 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		if(cmd.equals("PUTCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
 				Chunk ch = new Chunk(fileID, chunkNR);
-				
+
+				//waits timeout time before sending STORED message
+				int timeout = random.nextInt(401);
+				try {
+					Thread.sleep(timeout);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
 				//verificar se ainda n tem o ficheiro //TODO verificar
 				if(!ch.exists())
 				{
-					//waits timeout time before sending STORED message
-					int timeout = random.nextInt(401);
-					try {
-						Thread.sleep(timeout);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-					
 					//guardar chunk
 					try {
 						ch.saveChunk(body);
@@ -115,17 +115,17 @@ public class MDBackupMsg extends MulticastChannelMsg {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					} //TODO
-					
-					//enviar stored
-					String storedMsg = "STORED" + header.substring(header.indexOf(' ')) + Definitions.CRLF + Definitions.CRLF;
-					try {
-						MControlReader MC = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
-						MC.sendMessages(storedMsg);
-					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
 				}
+				//enviar stored
+				String storedMsg = "STORED" + header.substring(header.indexOf(' ')) + Definitions.CRLF + Definitions.CRLF;
+				try {
+					MControlReader MC = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
+					MC.sendMessages(storedMsg);
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+
 			}
 		}
 		else
