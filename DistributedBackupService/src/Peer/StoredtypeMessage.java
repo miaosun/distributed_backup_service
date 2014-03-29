@@ -11,4 +11,8 @@ public class StoredtypeMessage {
 		this.chunkNR=chunkNR;
 		this.peer=peer;
 	}
+	
+	public String getFileID() {
+		return fileID;
+	}
 }

@@ -33,7 +33,7 @@ public class MControlReader extends MulticastChannelMsg {
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
 				StoredtypeMessage storedmsg = new StoredtypeMessage(temp[2].trim(), Integer.parseInt(temp[3].trim()), peer);
-				Peer.addStoredMessage(storedmsg);
+				
 			}
 		}
 		else if(cmd.equals("GETCHUNK")) {

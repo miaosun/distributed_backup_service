@@ -12,3 +12,6 @@ public class PeerAddress {
 		this.port=port;
 	}
 }
+
+
+//TODO EQUALS

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -17,12 +18,13 @@ import multicastMsgs.MDBackupMsg;
 
 public class Peer {
 	
-//	public static Peer instance = null;
+	static List<Chunk> backedupChunks; // Arraylist com chunks armazenados
+	static HashMap<String, String> filesHash; // HashMap<filename,fileID>
+	//static Queue<String> userBackupRequests; //String: filename
+	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replicação
+	//static List<StoredtypeMessage> storedMessages;
+	static HashMap<Chunk, ArrayList<PeerAddress>> storedsInfo; // informacao chunk->peers
 	
-	static List<Chunk> backedupChunks;
-	//static HashMap<Chunk, int> backedupChunks;
-	static Queue<String> userBackupRequests; //String: filename
-	static List<StoredtypeMessage> storedMessages;
 	
 	/**
 	 * @param args
@@ -30,12 +32,10 @@ public class Peer {
 	 */
 	public static void main(String[] args) throws IOException {
 
-		//instance = new Peer();
-		
 		//Estruturas de Dados
 		backedupChunks = new ArrayList<Chunk>();
-		userBackupRequests = new LinkedList<String>();
-		storedMessages = new ArrayList<StoredtypeMessage>();
+		filesHash = new HashMap<String, String>();
+		storedsInfo = new HashMap<Chunk, ArrayList<PeerAddress>>();
 		
 		//TODO fazer set dos enderecos multicast e portos??
 		
@@ -50,10 +50,7 @@ public class Peer {
 		
 		menu();
 	}
-	
-//	public static Peer getInstance() {
-//		return instance;
-//	}
+
 	
 	public static void addBackedupChunk(Chunk newchunk) {
 		backedupChunks.add(newchunk);
@@ -61,22 +58,26 @@ public class Peer {
 	public static List<Chunk> getBackedupChunks() {
 		return backedupChunks;
 	}
-
-	public static void addUserBackupRequest(String filename) {
-		userBackupRequests.add(filename);
-	}
-	public static Queue<String> getUserBackupRequests() {
-		return userBackupRequests;
-	}
 	
-	public static void addStoredMessage(StoredtypeMessage storedmsg) {
-		storedMessages.add(storedmsg);
+	public static void addtoFilesHash(String filename, String fileID) {
+		filesHash.put(filename, fileID);
 	}
-	public static List<StoredtypeMessage> getStoredMessages() {
-		return storedMessages;
+	public static HashMap<String, String> getFilesHash() {
+		return filesHash;
 	}
-	public static void resetStoredMessagesList() {
-		storedMessages.clear();
+
+	public static void addtoStoredsInfo(Chunk ch, PeerAddress p) {
+		if(storedsInfo.containsKey(ch)) {
+			ArrayList<PeerAddress> peerList = storedsInfo.get(ch);
+			if(!peerList.contains(p)) {
+				peerList.add(p);
+			}
+		}
+		else {
+			ArrayList<PeerAddress> plist = new ArrayList<PeerAddress>();
+			plist.add(p);
+			storedsInfo.put(ch,plist);
+		}
 	}
 	
 	private static void menu() throws IOException {
