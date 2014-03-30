@@ -34,48 +34,61 @@ public class FileBackup extends Thread {
 			System.out.println("bitString: "+bitString);
 			String fileID = SHA256.hash256(bitString);
 			System.out.println("fileID: "+fileID);
-			int numberChunkParts = FileSplitter.getNumberParts(filename);
-			System.out.println("numberChunkParts: "+numberChunkParts);
-			int replicationDeg = getReplicationDeg();
-			System.out.println("REPDEGREE: "+replicationDeg);
 
-			MDBackupMsg bMsg = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT, fileID, replicationDeg);
-			System.out.println("MDBackup created");
-
-			for(int chunknr=0; chunknr < numberChunkParts; chunknr++)
+			int res = Peer.addFiletoHash(filename, fileID);
+			if(res==0) {
+				System.out.println("BACKUP JA REALIZADO E NAO HOUVE ALTERACOES!");
+			}
+			else
 			{
-				String chunkFilename = filename+"."+chunknr;
-				byte[] body = Files.readAllBytes(Paths.get(chunkFilename));
+				if(res==1) {
+					System.out.println("BACKUP JA REALIZADO MAS HOUVE ALTERACOES!");
+					//TODO file deletion antes de backup
+				}
 
-				long waitTime = 500;
-				int attempts = 5;
-				boolean repdegReached=false;
-				Chunk ch = new Chunk(fileID, chunknr);
-				while(attempts>0 && !repdegReached){ //nr tentativas < 5 & nao atingido nr desejado de stored's
-					bMsg.putchunkSend(chunknr, body);
+				int numberChunkParts = FileSplitter.getNumberParts(filename);
+				System.out.println("numberChunkParts: "+numberChunkParts);
+				int replicationDeg = getReplicationDeg();
+				System.out.println("REPDEGREE: "+replicationDeg);
 
-					try {
-						Thread.sleep(waitTime);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+				MDBackupMsg bMsg = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT, fileID, replicationDeg);
+				System.out.println("MDBackup created");
 
-					int storedsNr = Peer.getStoredsNr(ch);
-					//verificar se ja se obteve nr desejado de respostas, se sim repdegReached = true
-					if(storedsNr >= replicationDeg)
-					{
-						
-						System.out.println("Chunk sucessfully backed up in "+storedsNr+" peers!");
-						repdegReached=true;
-					}
-					else
-					{
-						System.out.println("Waiting for more peers...");
-						attempts--;
-						waitTime*=2;
-					}
-				}			
+				for(int chunknr=0; chunknr < numberChunkParts; chunknr++)
+				{
+					String chunkFilename = filename+"."+chunknr;
+					byte[] body = Files.readAllBytes(Paths.get(chunkFilename));
 
+					long waitTime = 500;
+					int attempts = 5;
+					boolean repdegReached=false;
+					Chunk ch = new Chunk(fileID, chunknr);
+					while(attempts>0 && !repdegReached){ //nr tentativas < 5 & nao atingido nr desejado de stored's
+						bMsg.putchunkSend(chunknr, body);
+
+						try {
+							Thread.sleep(waitTime);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+
+						int storedsNr = Peer.getStoredsNr(ch);
+						//verificar se ja se obteve nr desejado de respostas, se sim repdegReached = true
+						if(storedsNr >= replicationDeg)
+						{
+
+							System.out.println("Chunk sucessfully backed up in "+storedsNr+" peers!");
+							repdegReached=true;
+						}
+						else
+						{
+							System.out.println("Waiting for more peers...");
+							attempts--;
+							waitTime*=2;
+						}
+					}			
+
+				}
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -87,8 +100,6 @@ public class FileBackup extends Thread {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-
 	}
 
 	private static int getReplicationDeg() throws IOException {
