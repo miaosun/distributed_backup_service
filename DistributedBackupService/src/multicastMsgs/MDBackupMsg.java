@@ -90,7 +90,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		String cmd = temp[0].trim();
 		String fileID = temp[2].trim();
 		int chunkNR = Integer.parseInt(temp[3].trim());
-		int replicationDeg = Integer.parseInt(temp[4].trim());
+		//int replicationDeg = Integer.parseInt(temp[4].trim());
 
 		if(cmd.equals("PUTCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {

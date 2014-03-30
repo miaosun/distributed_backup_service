@@ -3,11 +3,9 @@ package multicastMsgs;
 import java.io.IOException;
 import java.net.DatagramPacket;
 
-import subprotocols.FileRestore;
 import Peer.Chunk;
 import Peer.Peer;
 import Peer.PeerAddress;
-import Peer.StoredtypeMessage;
 
 public class MControlReader extends MulticastChannelMsg {
 	
