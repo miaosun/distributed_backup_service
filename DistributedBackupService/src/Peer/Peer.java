@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import subprotocols.FileBackup;
+import subprotocols.FileDeletion;
 import subprotocols.FileRestore;
 import multicastMsgs.MControlReader;
 import multicastMsgs.MDBackupMsg;
@@ -20,7 +21,7 @@ public class Peer {
 
 
 	public static Scanner scanner = new Scanner(System.in);
-	
+
 	static List<Chunk> backedupChunks; // Arraylist com chunks armazenados
 	static List<FileInfo> filesInfo; // FileInfo(Filename, fileID, nTotalChunks)
 	//static Queue<String> userBackupRequests; //String: filename
@@ -99,10 +100,14 @@ public class Peer {
 	public static boolean chunkExists(Chunk ch) {
 		return backedupChunks.contains(ch);
 	}
-	
-//	public static void addToFilesInfo() {
-//		
-//	}
+
+	public static String getFilenameByFileID(String fileID) {
+		for(FileInfo f : filesInfo) {
+			if(f.getFileID().equals(fileID))
+				return f.getFilename();
+		}
+		return "";
+	}
 
 	public static FileInfo existsFile(String fname) {
 		for(FileInfo f : filesInfo ) {
@@ -168,7 +173,8 @@ public class Peer {
 			System.out.println("Please Make a selection:"); 
 			System.out.println("[1] Send putchunk message"); 
 			System.out.println("[2] Restore a file:"); 
-			System.out.println("[3] exit"); 
+			System.out.println("[3] Delete a file:");
+			System.out.println("[4] Exit"); 
 
 			System.out.println("Selection: ");
 
@@ -176,9 +182,9 @@ public class Peer {
 			try{
 				selection=scanner.nextInt();
 			}catch(NoSuchElementException e){}
-			
+
 			switch (selection){
-	
+
 			case 1:
 				System.out.println("*Backup file*");
 				backupRequest();
@@ -190,6 +196,10 @@ public class Peer {
 				break;
 
 			case 3:
+				System.out.println("*Delete File*");
+				deleteFileRequest();
+				break;
+			case 4:
 				System.out.println("Exit Successful");
 				System.exit(0);
 
@@ -252,6 +262,27 @@ public class Peer {
 			else
 				System.out.println("File hasn't been backed up, try again!\n");
 		}
+	}
+
+	private static void deleteFileRequest() throws IOException {
+		Boolean b = true;
+		while(b)
+		{
+			System.out.println("[DELETE]filename: ");
+			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
+			String filename = Definitions.backupFilesDirectory+inputStream.readLine();
+
+			FileInfo finfo = existsFile(filename);
+			if(finfo != null)
+			{
+				b = false;
+				FileDeletion deletion = new FileDeletion(finfo.getFileID(), true);
+				deletion.start();
+			}
+			else
+				System.out.println("File hasn't been backed up, try again!\n");
+		}
+
 	}
 
 	private static int getReplicationDeg() throws IOException {

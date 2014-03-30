@@ -56,7 +56,7 @@ public class FileRestore extends Thread {
 					attempts--;
 					waitTime*=2;
 				}
-			}			
+			}
 		}
 		if(count == nTotalChunks)
 			FileSplitter.join(finfo.getFilename(), Definitions.backupFilesDirectory+fileID, nTotalChunks);
