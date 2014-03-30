@@ -31,21 +31,19 @@ public class MControlReader extends MulticastChannelMsg {
 		System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
-		String fileID="";
-		
+		String fileID = temp[2].trim();
+		int chunkNr = Integer.parseInt(temp[3].trim());
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
-				fileID = temp[2].trim();
-				Chunk ch = new Chunk(fileID, Integer.parseInt(temp[3].trim()));
+				Chunk ch = new Chunk(fileID, chunkNr);
 				Peer.addtoStoredsInfo(ch, peer);
 			}
 		}
 		else if(cmd.equals("GETCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
-				fileID = temp[2].trim();
 				ChunkRestore chRestore;
 				try {
-					chRestore = new ChunkRestore(fileID, Integer.parseInt(temp[3].trim()));
+					chRestore = new ChunkRestore(fileID, chunkNr);
 					chRestore.start();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -57,6 +55,12 @@ public class MControlReader extends MulticastChannelMsg {
 			fileID = temp[1].substring(0, temp[1].length()-4);
 			FileDeletion fdeletion= new FileDeletion(fileID, false);
 			fdeletion.start();
+		}
+		else if(cmd.equals("REMOVED")) {
+			if(verifyVersion(temp[1].trim())) {
+				
+				
+			}
 		}
 		else
 		{

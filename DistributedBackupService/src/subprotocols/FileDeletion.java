@@ -44,7 +44,8 @@ public class FileDeletion  extends MulticastChannelMsg{
 			}
 			//delete file
 			try {
-				Files.deleteIfExists(Paths.get(Definitions.backupFilesDirectory+Peer.Peer.getFilenameByFileID(fileID)));
+				Files.deleteIfExists(Paths.get(Peer.Peer.getFilenameByFileID(fileID)));
+				System.out.println("File deleted successfully.");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
