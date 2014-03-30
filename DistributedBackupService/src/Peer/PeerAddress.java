@@ -14,7 +14,7 @@ public class PeerAddress {
 
 	@Override
 	public boolean equals(Object obj) {
-		if ( obj instanceof PeerAddress && ((this.address).equals( ((PeerAddress)obj).address)) && ((this.port) == ((PeerAddress)obj).port) )
+		if ( obj instanceof PeerAddress && ((this.address).equals( ((PeerAddress)obj).address))) //&& ((this.port) == ((PeerAddress)obj).port) )
 			return true;
 		else
 			return false;

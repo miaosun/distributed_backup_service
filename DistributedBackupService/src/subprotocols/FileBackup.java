@@ -64,6 +64,7 @@ public class FileBackup extends Thread {
 					//verificar se ja se obteve nr desejado de respostas, se sim repdegReached = true
 					if(storedsNr >= replicationDeg)
 					{
+						
 						System.out.println("Chunk sucessfully backed up in "+storedsNr+" peers!");
 						repdegReached=true;
 					}

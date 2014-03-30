@@ -36,4 +36,10 @@ public class Chunk {
 		else
 			return false;
 	}
+	
+	@Override
+	public int hashCode() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
 }

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import subprotocols.FileBackup;
@@ -18,7 +19,7 @@ public class Peer {
 	static List<Chunk> backedupChunks; // Arraylist com chunks armazenados
 	static HashMap<String, String> filesHash; // HashMap<filename,fileID>
 	//static Queue<String> userBackupRequests; //String: filename
-	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replica��o
+	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replicao
 	//static List<StoredtypeMessage> storedMessages;
 	static HashMap<Chunk, ArrayList<PeerAddress>> storedsInfo; // informacao chunk->peers
 	
@@ -47,7 +48,6 @@ public class Peer {
 		menu();
 	}
 
-	
 	public static void addBackedupChunk(Chunk newchunk) {
 		backedupChunks.add(newchunk);
 	}
@@ -64,7 +64,6 @@ public class Peer {
 
 	public static void addtoStoredsInfo(Chunk ch, PeerAddress p) {
 		if(storedsInfo.containsKey(ch)) {
-
 			ArrayList<PeerAddress> peerList = storedsInfo.get(ch);
 
 			if(!peerList.contains(p)) {
@@ -81,20 +80,22 @@ public class Peer {
 	
 	public static int getStoredsNr(Chunk ch) {
 		if(storedsInfo.containsKey(ch)) {
-			return (storedsInfo.get(ch)).size();
+			return storedsInfo.get(ch).size();
 		}
 		else
+		{
 			return 0;
+		}
+			
 
 	}
 	
 	private static void menu() throws IOException {
 
-		@SuppressWarnings("resource")
-		Scanner sc = new Scanner(System.in);
-
-		while(true) {
-
+		while(true) {		
+			@SuppressWarnings("resource")
+			Scanner sc = new Scanner(System.in);
+			
 			System.out.println("Please Make a selection:"); 
 			System.out.println("[1] Send putchunk message"); 
 			System.out.println("[2] Restore a file:");
@@ -102,8 +103,12 @@ public class Peer {
 			System.out.println("[3] exit"); 
 
 			System.out.println("Selection: ");
-			int selection=sc.nextInt();
-
+			int selection=0;
+			try{
+				selection=sc.nextInt();
+			}catch(NoSuchElementException e){}
+			
+			
 			switch (selection){
 
 			case 1: 
@@ -122,11 +127,11 @@ public class Peer {
 
 			default:
 				System.out.println("Please enter a valid selection.");
+				break;
 
-			};
-
+			}
 		}
-
+		
 	}
 
 
