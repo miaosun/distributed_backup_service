@@ -20,11 +20,13 @@ public class MControlReader extends MulticastChannelMsg {
 
 	public void processPacket(DatagramPacket packet) {
 		
-		String msg = new String(packet.getData());
+		byte[] message = new byte[packet.getLength()];
+		System.arraycopy(packet.getData(), 0, message, 0, packet.getLength());
+		String msg = new String(message);
 		
-		System.out.println("Message received: "+msg.substring(0,msg.indexOf(Definitions.CRLF+Definitions.CRLF)));
+		System.out.println("Message received: "+msg.substring(0,msg.length()-4));
 		PeerAddress peer = new PeerAddress(packet.getAddress(),packet.getPort());
-		System.out.println("Peer: "+packet.getAddress()+"  "+packet.getPort());
+		System.out.println("by Peer: "+packet.getAddress()+"  "+packet.getPort());
 		
 		System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
