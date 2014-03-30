@@ -94,6 +94,23 @@ public class FileSplitter
 		out.close();
 	}
 
+	public static void join(String baseFilename, String fileID, int nTotalChunks) throws IOException
+	{
+		// now, assume that the files are correctly numbered in order (that some joker didn't delete any part)
+		BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(baseFilename));
+		for (int part = 0; part < nTotalChunks; part++)
+		{
+			BufferedInputStream in = new BufferedInputStream(new FileInputStream(fileID + "." + part));
+
+			int b;
+			while ( (b = in.read()) != -1 )
+				out.write(b);
+
+			in.close();
+		}
+		out.close();
+	}
+	
 	/**
 	 * find out how many chunks there are to the base filename
 	 */

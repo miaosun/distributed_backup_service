@@ -24,7 +24,25 @@ public class Peer {
 	//static List<StoredtypeMessage> storedMessages;
 	static HashMap<Chunk, ArrayList<PeerAddress>> storedsInfo; // informacao chunk->peers
 	
+	static Chunk waitingChunk = null;
+	static boolean received = false;
 	
+	public static Chunk getWaitingChunk() {
+		return waitingChunk;
+	}
+
+	public static void setWaitingChunk(Chunk waitingChunk) {
+		Peer.waitingChunk = waitingChunk;
+	}
+
+	public static boolean isReceived() {
+		return received;
+	}
+
+	public static void setReceived(boolean received) {
+		Peer.received = received;
+	}
+
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -171,15 +189,16 @@ public class Peer {
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
 			String filename = Definitions.backupFilesDirectory+inputStream.readLine();
 			
-			File f = new File(filename);
-			if(f.exists() && !f.isDirectory()) //file exists //f.canRead() ? //f.isFile() ?
+			FileInfo finfo = existsFile(filename);
+			if(finfo != null)
 			{
 				b = false;
-				FileRestore restore = new FileRestore(filename);
-				
+				FileRestore restore = new FileRestore(finfo);
+				restore.start();
+				restore.join();
 			}
 			else
-				System.out.println("File not exists, try again!\n");
+				System.out.println("File hasn't been updated, try again!\n");
 		}
 	}
 
