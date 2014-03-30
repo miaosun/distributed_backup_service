@@ -53,12 +53,16 @@ public class FileBackup extends Thread {
 				canGo=true;
 
 			if(canGo) {
+				
 				FileSplitter.split(filename);
 
 				int numberChunkParts = FileSplitter.getNumberParts(filename);
 				System.out.println("numberChunkParts: "+numberChunkParts);
 				System.out.println("REPDEGREE: "+replicationDegree);
-
+				
+				//save at filesInfo List
+				Peer.addtoFilesInfo(filename, fileID, numberChunkParts);
+				
 				MDBackupMsg bMsg = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT, fileID, replicationDegree);
 				System.out.println("MDBackup created");
 

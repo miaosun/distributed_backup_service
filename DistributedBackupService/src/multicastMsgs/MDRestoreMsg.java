@@ -29,7 +29,9 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 		joinMulticastGroup();
 		while(true) {
 			System.out.println("MDR thread waiting for chunk messages...");
-			processMsg(receivePacketByte());
+			byte[] data = new byte[65000];
+			data = receivePacketByte();
+			processMsg(data);
 		}
 
 	}
@@ -47,8 +49,13 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 				break;
 			}
 		}
-
+		
+		
 		String[] temp = header.split(" ");
+		System.out.println("TESTING: ");
+		for(int i=0; i<temp.length; i++) {
+			System.out.println("Part "+ i+ ": "+temp[i]);
+		}
 		String cmd = temp[0].trim();
 		String fileID = temp[2].trim();
 		int chunkNR = Integer.parseInt(temp[3].trim());

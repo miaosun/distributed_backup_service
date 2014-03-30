@@ -22,7 +22,7 @@ public class Peer {
 	public static Scanner scanner = new Scanner(System.in);
 	
 	static List<Chunk> backedupChunks; // Arraylist com chunks armazenados
-	static List<FileInfo> filesInfo; // HashMap<filename,fileID>
+	static List<FileInfo> filesInfo; // FileInfo(Filename, fileID, nTotalChunks)
 	//static Queue<String> userBackupRequests; //String: filename
 	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replicao
 	//static List<StoredtypeMessage> storedMessages;
@@ -99,6 +99,10 @@ public class Peer {
 	public static boolean chunkExists(Chunk ch) {
 		return backedupChunks.contains(ch);
 	}
+	
+//	public static void addToFilesInfo() {
+//		
+//	}
 
 	public static FileInfo existsFile(String fname) {
 		for(FileInfo f : filesInfo ) {
@@ -248,7 +252,7 @@ public class Peer {
 				}
 			}
 			else
-				System.out.println("File hasn't been updated, try again!\n");
+				System.out.println("File hasn't been backed up, try again!\n");
 		}
 	}
 
@@ -261,7 +265,7 @@ public class Peer {
 
 			int replicationDeg = scanner.nextInt();
 			//sc.close();
-			if(replicationDeg <= 9 && replicationDeg > 0){
+			if(replicationDeg <= 9 && replicationDeg > 0) {
 				//scanner.close();
 				return replicationDeg;
 			}
