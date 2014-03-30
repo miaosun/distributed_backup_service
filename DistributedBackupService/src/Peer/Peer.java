@@ -18,6 +18,9 @@ import multicastMsgs.MDRestoreMsg;
 
 public class Peer {
 
+
+	public static Scanner scanner = new Scanner(System.in);
+	
 	static List<Chunk> backedupChunks; // Arraylist com chunks armazenados
 	static List<FileInfo> filesInfo; // HashMap<filename,fileID>
 	//static Queue<String> userBackupRequests; //String: filename
@@ -157,25 +160,22 @@ public class Peer {
 	private static void menu() throws IOException {
 
 		while(true) {		
-			@SuppressWarnings("resource")
-			Scanner sc = new Scanner(System.in);
-
+			//String input;
 			System.out.println("Please Make a selection:"); 
 			System.out.println("[1] Send putchunk message"); 
-			System.out.println("[2] Restore a file:");
-			//System.out.println("[2] Receive putchunk message"); 
+			System.out.println("[2] Restore a file:"); 
 			System.out.println("[3] exit"); 
 
 			System.out.println("Selection: ");
 			int selection=0;
 			try{
-				selection=sc.nextInt();
+				selection=scanner.nextInt();
 			}catch(NoSuchElementException e){}
-
-
+			
 			switch (selection){
 
-			case 1: 
+			case 1:
+				//scanner.close();
 				System.out.println("*Backup file*");
 				backupRequest();
 				break;
@@ -208,8 +208,9 @@ public class Peer {
 			File f = new File(filename);
 			if(f.exists() && !f.isDirectory()) //file exists //f.canRead() ? //f.isFile() ?
 			{
+				int replicationDeg = getReplicationDeg();
 				b = false;
-				FileBackup backup = new FileBackup(filename);
+				FileBackup backup = new FileBackup(filename, replicationDeg);
 				backup.start();
 				try {
 					backup.join(); //espera que thread termine
@@ -250,4 +251,22 @@ public class Peer {
 		}
 	}
 
+	private static int getReplicationDeg() throws IOException {
+		Boolean b = true;
+		//Scanner sc = new Scanner(System.in);
+		while(b)
+		{
+			System.out.println("How many replications? ");
+
+			int replicationDeg = scanner.nextInt();
+			//sc.close();
+			if(replicationDeg <= 9 && replicationDeg > 0){
+				//scanner.close();
+				return replicationDeg;
+			}
+			else
+				System.out.println("Can't have this number of replications, try again!\n");
+		}
+		return 0;
+	}
 }

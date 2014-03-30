@@ -114,8 +114,11 @@ public class MDBackupMsg extends MulticastChannelMsg {
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} //TODO
+					}
 				}
+				else
+					System.out.println("Chunk already backed up");
+				
 				//enviar stored
 				String storedMsg = "STORED" + header.substring(header.indexOf(' ')) + Definitions.CRLF + Definitions.CRLF;
 				try {

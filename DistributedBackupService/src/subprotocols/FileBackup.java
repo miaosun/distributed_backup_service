@@ -22,9 +22,11 @@ import utilities.SHA256;
 public class FileBackup extends Thread {
 
 	String filename;
+	int replicationDegree;
 
-	public FileBackup(String filename) {
+	public FileBackup(String filename, int repdegree) {
 		this.filename=filename;
+		replicationDegree = repdegree;
 	}
 
 	public void run() {
@@ -57,10 +59,9 @@ public class FileBackup extends Thread {
 
 				int numberChunkParts = FileSplitter.getNumberParts(filename);
 				System.out.println("numberChunkParts: "+numberChunkParts);
-				int replicationDeg = getReplicationDeg();
-				System.out.println("REPDEGREE: "+replicationDeg);
+				System.out.println("REPDEGREE: "+replicationDegree);
 
-				MDBackupMsg bMsg = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT, fileID, replicationDeg);
+				MDBackupMsg bMsg = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT, fileID, replicationDegree);
 				System.out.println("MDBackup created");
 
 				for(int chunknr=0; chunknr < numberChunkParts; chunknr++)
@@ -83,7 +84,7 @@ public class FileBackup extends Thread {
 
 						int storedsNr = Peer.getStoredsNr(ch);
 						//verificar se ja se obteve nr desejado de respostas, se sim repdegReached = true
-						if(storedsNr >= replicationDeg)
+						if(storedsNr >= replicationDegree)
 						{
 
 							System.out.println("Chunk sucessfully backed up in "+storedsNr+" peers!");
@@ -111,24 +112,5 @@ public class FileBackup extends Thread {
 		}
 	}
 
-	private static int getReplicationDeg() throws IOException {
-		Boolean b = true;
-		Scanner sc = new Scanner(System.in);
-		while(b)
-		{
-			System.out.println("How many replications? ");
-
-			int replicationDeg = sc.nextInt();
-
-			if(replicationDeg <= 9 && replicationDeg > 0){
-				sc.close();
-				return replicationDeg;
-			}
-			else
-				System.out.println("Can't have this number of replications, try again!\n");
-		}
-		sc.close();
-		return 0;
-	}
 
 }
