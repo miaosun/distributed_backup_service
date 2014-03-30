@@ -23,7 +23,7 @@ public class Peer {
 	public static Scanner scanner = new Scanner(System.in);
 
 	static List<Chunk> backedupChunks; // Arraylist com chunks armazenados
-	static List<FileInfo> filesInfo; // FileInfo(Filename, fileID, nTotalChunks)
+	static List<FileInfo> filesInfo; // FileInfo(Filename, fileID, nTotalChunks, repDegree)
 	//static Queue<String> userBackupRequests; //String: filename
 	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replicao
 	//static List<StoredtypeMessage> storedMessages;
@@ -78,6 +78,15 @@ public class Peer {
 
 		menu();
 	}
+	
+	public static int getDesiredRepDegByfileID(String fileID) {
+		for(FileInfo f : filesInfo) {
+			if(f.getFileID().equals(fileID)) {
+				return f.getReplicationDegree();
+			}
+		}
+		return 0;
+	}
 
 	public static boolean wcAlreadySent(Chunk ch) {
 		return waitingChunksToSend.get(ch);
@@ -118,7 +127,7 @@ public class Peer {
 		return null;
 	}
 
-	public static int addtoFilesInfo(String filename, String fileID, int nTotalChunks) {
+	public static int addtoFilesInfo(String filename, String fileID, int nTotalChunks, int repdeg) {
 		for(FileInfo f : filesInfo) {
 			if(f.getFilename().equals(filename)) {
 				if(f.getFileID().equals(fileID))
@@ -127,7 +136,7 @@ public class Peer {
 					return 1;
 			}
 		}
-		FileInfo finfo = new FileInfo(filename, fileID, nTotalChunks);
+		FileInfo finfo = new FileInfo(filename, fileID, nTotalChunks, repdeg);
 		filesInfo.add(finfo);
 		return -1;
 	}

@@ -61,7 +61,7 @@ public class FileBackup extends Thread {
 				System.out.println("REPDEGREE: "+replicationDegree);
 				
 				//save at filesInfo List
-				Peer.addtoFilesInfo(filename, fileID, numberChunkParts);
+				Peer.addtoFilesInfo(filename, fileID, numberChunkParts, replicationDegree);
 				
 				MDBackupMsg bMsg = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT, fileID, replicationDegree);
 				System.out.println("MDBackup created");
