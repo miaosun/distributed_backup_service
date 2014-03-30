@@ -3,6 +3,7 @@ package multicastMsgs;
 import java.io.IOException;
 import java.net.DatagramPacket;
 
+import subprotocols.FileDeletion;
 import Peer.Chunk;
 import Peer.Peer;
 import Peer.PeerAddress;
@@ -17,7 +18,7 @@ public class MControlReader extends MulticastChannelMsg {
 		sendPacket(msg.getBytes());
 	}
 
-	public void processPacket(DatagramPacket packet) {
+	public void processPacket(DatagramPacket packet) throws IOException {
 		
 		byte[] message = new byte[packet.getLength()];
 		System.arraycopy(packet.getData(), 0, message, 0, packet.getLength());
