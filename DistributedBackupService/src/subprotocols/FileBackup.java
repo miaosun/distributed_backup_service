@@ -74,7 +74,7 @@ public class FileBackup extends Thread {
 					long waitTime = 500;
 					int attempts = 5;
 					boolean repdegReached=false;
-					Chunk ch = new Chunk(fileID, chunknr);
+					Chunk ch = new Chunk(fileID, chunknr, replicationDegree);
 					while(attempts>0 && !repdegReached){ //nr tentativas < 5 & nao atingido nr desejado de stored's
 						bMsg.putchunkSend(chunknr, body);
 

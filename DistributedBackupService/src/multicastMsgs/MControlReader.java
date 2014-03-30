@@ -35,7 +35,7 @@ public class MControlReader extends MulticastChannelMsg {
 		int chunkNr = Integer.parseInt(temp[3].trim());
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
-				Chunk ch = new Chunk(fileID, chunkNr);
+				Chunk ch = new Chunk(fileID, chunkNr, 0);
 				Peer.addtoStoredsInfo(ch, peer);
 			}
 		}
@@ -43,7 +43,8 @@ public class MControlReader extends MulticastChannelMsg {
 			if(verifyVersion(temp[1].trim())) {
 				ChunkRestore chRestore;
 				try {
-					chRestore = new ChunkRestore(fileID, chunkNr);
+					int desiredRepDeg = Peer.getDesiredRepDegByFileID(fileID);
+					chRestore = new ChunkRestore(fileID, chunkNr, desiredRepDeg);
 					chRestore.start();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

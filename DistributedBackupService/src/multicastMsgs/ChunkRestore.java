@@ -13,17 +13,19 @@ public class ChunkRestore extends MulticastChannelMsg{
 
 	private String fileID;
 	private int chunkNR;
+	private int desiredRepDeg;
 
-	public ChunkRestore(String fileID, int chunkNR) throws IOException {
+	public ChunkRestore(String fileID, int chunkNR, int desiredRepDeg) throws IOException {
 		super(Definitions.MDRADDRESS, Definitions.MDRPORT);
 		this.fileID=fileID;
 		this.chunkNR=chunkNR;
+		this.desiredRepDeg = desiredRepDeg;
 	}
 
 	@Override
 	public void run() {
 
-		Chunk ch = new Chunk(fileID, chunkNR);
+		Chunk ch = new Chunk(fileID, chunkNR, desiredRepDeg);
 
 		if(Peer.chunkExists(ch)){
 			if(!Peer.verifyWaitingChunk(ch)) {

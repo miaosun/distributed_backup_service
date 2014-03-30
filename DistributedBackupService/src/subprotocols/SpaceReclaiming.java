@@ -1,5 +1,13 @@
 package subprotocols;
 
-public class SpaceReclaiming {
+import multicastMsgs.MulticastChannelMsg;
 
+public class SpaceReclaiming extends MulticastChannelMsg {
+
+	public SpaceReclaiming(int nChunktToDelete)  {
+
+	}
+	
+	
+	
 }

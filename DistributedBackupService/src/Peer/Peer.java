@@ -12,6 +12,7 @@ import java.util.Scanner;
 import subprotocols.FileBackup;
 import subprotocols.FileDeletion;
 import subprotocols.FileRestore;
+import subprotocols.SpaceReclaiming;
 import multicastMsgs.MControlReader;
 import multicastMsgs.MDBackupMsg;
 import multicastMsgs.MDRestoreMsg;
@@ -174,7 +175,8 @@ public class Peer {
 			System.out.println("[1] Send putchunk message"); 
 			System.out.println("[2] Restore a file:"); 
 			System.out.println("[3] Delete a file:");
-			System.out.println("[4] Exit"); 
+			System.out.println("[4] Space Reclaiming:");
+			System.out.println("[5] Exit"); 
 
 			System.out.println("Selection: ");
 
@@ -199,7 +201,13 @@ public class Peer {
 				System.out.println("*Delete File*");
 				deleteFileRequest();
 				break;
+				
 			case 4:
+				System.out.println("*Space Reclaiming*");
+				spaceReclaimingRequest();
+				break;
+				
+			case 5:
 				System.out.println("Exit Successful");
 				System.exit(0);
 
@@ -278,6 +286,32 @@ public class Peer {
 				b = false;
 				FileDeletion deletion = new FileDeletion(finfo.getFileID(), true);
 				deletion.start();
+			}
+			else
+				System.out.println("File hasn't been backed up, try again!\n");
+		}
+
+	}
+	
+	private static void spaceReclaimingRequest() throws IOException {
+		Boolean b = true;
+		while(b)
+		{
+			System.out.println("How many chunks to delete? ");
+
+			int chunksToDelete = scanner.nextInt();
+			if(chunksToDelete <= backedupChunks.size() && chunksToDelete > 0)
+			{
+				b = false;
+				SpaceReclaiming sReclaiming = new SpaceReclaiming(chunksToDelete);
+				sReclaiming.start();
+				
+				try {
+					sReclaiming.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			else
 				System.out.println("File hasn't been backed up, try again!\n");

@@ -67,8 +67,10 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 
 				byte[] body = new byte[msg.length-offset];
 				System.arraycopy(msg, offset, body, 0, msg.length-offset);
-
-				Chunk ch = new Chunk(fileID, chunkNR);
+				
+				int desiredRepDeg = Peer.getDesiredRepDegByFileID(fileID);
+				
+				Chunk ch = new Chunk(fileID, chunkNR, desiredRepDeg);
 
 				if( Peer.getWaitingChunk().equals(ch) ) {
 					Peer.setReceived(true);
