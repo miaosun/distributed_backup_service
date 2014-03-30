@@ -16,15 +16,15 @@ import multicastMsgs.MDBackupMsg;
 
 
 public class Peer {
-	
+
 	static List<Chunk> backedupChunks; // Arraylist com chunks armazenados
 	static List<FileInfo> filesInfo; // HashMap<filename,fileID>
 	//static Queue<String> userBackupRequests; //String: filename
 	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replicao
 	//static List<StoredtypeMessage> storedMessages;
 	static HashMap<Chunk, ArrayList<PeerAddress>> storedsInfo; // informacao chunk->peers
-	
-	
+
+
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -35,32 +35,51 @@ public class Peer {
 		backedupChunks = new ArrayList<Chunk>();
 		filesInfo = new ArrayList<FileInfo>();
 		storedsInfo = new HashMap<Chunk, ArrayList<PeerAddress>>();
-		
+
 		//TODO fazer set dos enderecos multicast e portos??
-		
+
 		//lancar thread ler MC
 		MControlReader mc = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
 		mc.start();
-		
+
 		//lancar thread ler MDB
 		MDBackupMsg mdb = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT);
 		mdb.start();
-		
+
 		menu();
 	}
+
+	public static FileInfo existsFile(String fname) {
+		for(FileInfo f : filesInfo ) {
+			if(f.getFilename().equals(fname)) {
+				return f;
+			}
+		}
+		return null;
+	}
+
+
+
+	public static int addtoFilesInfo(String filename, String fileID, int nTotalChunks) {
+		for(FileInfo f : filesInfo) {
+			if(f.getFilename().equals(filename)) {
+				if(f.getFileID().equals(fileID))
+					return 0;
+				else
+					return 1;
+			}
+		}
+		FileInfo finfo = new FileInfo(filename, fileID, nTotalChunks);
+		filesInfo.add(finfo);
+		return -1;
+	}
+
 
 	public static void addBackedupChunk(Chunk newchunk) {
 		backedupChunks.add(newchunk);
 	}
 	public static List<Chunk> getBackedupChunks() {
 		return backedupChunks;
-	}
-	
-	public static void addtoFilesInfo(String filename, String fileID, int nTotalChunks) {
-		filesHash.put(filename, fileID);
-	}
-	public static HashMap<String, String> getFilesHash() {
-		return filesHash;
 	}
 
 	public static void addtoStoredsInfo(Chunk ch, PeerAddress p) {
@@ -78,7 +97,7 @@ public class Peer {
 			storedsInfo.put(ch,plist);
 		}
 	}
-	
+
 	public static int getStoredsNr(Chunk ch) {
 		if(storedsInfo.containsKey(ch)) {
 			return storedsInfo.get(ch).size();
@@ -87,16 +106,16 @@ public class Peer {
 		{
 			return 0;
 		}
-			
+
 
 	}
-	
+
 	private static void menu() throws IOException {
 
 		while(true) {		
 			@SuppressWarnings("resource")
 			Scanner sc = new Scanner(System.in);
-			
+
 			System.out.println("Please Make a selection:"); 
 			System.out.println("[1] Send putchunk message"); 
 			System.out.println("[2] Restore a file:");
@@ -108,8 +127,8 @@ public class Peer {
 			try{
 				selection=sc.nextInt();
 			}catch(NoSuchElementException e){}
-			
-			
+
+
 			switch (selection){
 
 			case 1: 
@@ -132,7 +151,7 @@ public class Peer {
 
 			}
 		}
-		
+
 	}
 
 
@@ -143,7 +162,7 @@ public class Peer {
 			System.out.print("[BACKUP]filename: ");
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
 			String filename = Definitions.backupFilesDirectory+inputStream.readLine();
-			
+
 			File f = new File(filename);
 			if(f.exists() && !f.isDirectory()) //file exists //f.canRead() ? //f.isFile() ?
 			{
@@ -160,9 +179,9 @@ public class Peer {
 			else
 				System.out.println("File not exists, try again!\n");
 		}
-		
+
 	}
-	
+
 	private static void restoreRequest() throws IOException {
 		Boolean b = true;
 		while(b)
@@ -170,13 +189,13 @@ public class Peer {
 			System.out.println("[RESTORE]filename: ");
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
 			String filename = Definitions.backupFilesDirectory+inputStream.readLine();
-			
+
 			File f = new File(filename);
 			if(f.exists() && !f.isDirectory()) //file exists //f.canRead() ? //f.isFile() ?
 			{
 				b = false;
 				FileRestore restore = new FileRestore(filename);
-				
+
 			}
 			else
 				System.out.println("File not exists, try again!\n");

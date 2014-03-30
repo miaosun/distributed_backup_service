@@ -29,16 +29,25 @@ public class MControlReader extends MulticastChannelMsg {
 		System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
+		String fileID = temp[2].trim();
+		int chunkNR = Integer.parseInt(temp[3].trim());
 
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
-				Chunk ch = new Chunk(temp[2].trim(), Integer.parseInt(temp[3].trim()));
+				Chunk ch = new Chunk(fileID, chunkNR);
 				Peer.addtoStoredsInfo(ch, peer);
 			}
 		}
 		else if(cmd.equals("GETCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
-				//lanca thread p restore
+				ChunkRestore chRestore;
+				try {
+					chRestore = new ChunkRestore(fileID, chunkNR);
+					chRestore.start();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		else

@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import Peer.Chunk;
 import Peer.Definitions;
+import Peer.FileInfo;
 import Peer.Peer;
 
 import java.io.File;
@@ -28,23 +29,31 @@ public class FileBackup extends Thread {
 
 	public void run() {
 		try {
+			boolean canGo = false;
 			File f = new File(filename);
-			FileSplitter.split(filename);
 			String bitString = filename+f.lastModified()+f.length();
 			System.out.println("bitString: "+bitString);
 			String fileID = SHA256.hash256(bitString);
 			System.out.println("fileID: "+fileID);
 
-			int res = Peer.addFiletoHash(filename, fileID);
-			if(res==0) {
-				System.out.println("BACKUP JA REALIZADO E NAO HOUVE ALTERACOES!");
-			}
-			else
-			{
-				if(res==1) {
+			FileInfo fx = Peer.existsFile(filename);
+			if(fx != null) {
+				if(fx.getFileID() == fileID) {
+					System.out.println("BACKUP JA REALIZADO E NAO HOUVE ALTERACOES!");
+					canGo=false;
+				}
+				else
+				{
 					System.out.println("BACKUP JA REALIZADO MAS HOUVE ALTERACOES!");
 					//TODO file deletion antes de backup
+					canGo=true;
 				}
+			}
+			else
+				canGo=true;
+
+			if(canGo) {
+				FileSplitter.split(filename);
 
 				int numberChunkParts = FileSplitter.getNumberParts(filename);
 				System.out.println("numberChunkParts: "+numberChunkParts);
