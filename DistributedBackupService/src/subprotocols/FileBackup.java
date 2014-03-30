@@ -99,7 +99,7 @@ public class FileBackup extends Thread {
 							waitTime*=2;
 						}
 					}			
-
+					Files.deleteIfExists(Paths.get(Definitions.backupFilesDirectory+chunkFilename));
 				}
 			}
 		} catch (FileNotFoundException e) {

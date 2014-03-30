@@ -59,7 +59,7 @@ public class FileRestore extends Thread {
 			}			
 		}
 		if(count == nTotalChunks)
-			FileSplitter.join(finfo.getFilename(), fileID, nTotalChunks);
+			FileSplitter.join(finfo.getFilename(), Definitions.backupFilesDirectory+fileID, nTotalChunks);
 		else
 			System.out.println("Nao foi possivel de fazer restore do ficheiro");
 

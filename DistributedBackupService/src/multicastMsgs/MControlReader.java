@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 
 import Peer.Chunk;
-import Peer.Definitions;
 import Peer.Peer;
 import Peer.PeerAddress;
 
@@ -31,26 +30,32 @@ public class MControlReader extends MulticastChannelMsg {
 		System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
-		String fileID = temp[2].trim();
-		int chunkNR = Integer.parseInt(temp[3].trim());
-
+		String fileID="";
+		
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
-				Chunk ch = new Chunk(fileID, chunkNR);
+				fileID = temp[2].trim();
+				Chunk ch = new Chunk(fileID, Integer.parseInt(temp[3].trim()));
 				Peer.addtoStoredsInfo(ch, peer);
 			}
 		}
 		else if(cmd.equals("GETCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
+				fileID = temp[2].trim();
 				ChunkRestore chRestore;
 				try {
-					chRestore = new ChunkRestore(fileID, chunkNR);
+					chRestore = new ChunkRestore(fileID, Integer.parseInt(temp[3].trim()));
 					chRestore.start();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+		}
+		else if(cmd.equals("DELETE")) {
+			fileID = temp[1].substring(0, temp[1].length()-4);
+			FileDeletion fdeletion= new FileDeletion(fileID, false);
+			fdeletion.start();
 		}
 		else
 		{

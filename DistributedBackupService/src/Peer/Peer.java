@@ -162,9 +162,7 @@ public class Peer {
 	}
 
 	private static void menu() throws IOException {
-		@SuppressWarnings("resource")
-		Scanner sc = new Scanner(System.in);
-
+		
 		while(true) {		
 
 			System.out.println("Please Make a selection:"); 
