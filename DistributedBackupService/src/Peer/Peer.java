@@ -10,6 +10,7 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import subprotocols.FileBackup;
+import subprotocols.FileRestore;
 import multicastMsgs.MControlReader;
 import multicastMsgs.MDBackupMsg;
 
@@ -17,7 +18,7 @@ import multicastMsgs.MDBackupMsg;
 public class Peer {
 	
 	static List<Chunk> backedupChunks; // Arraylist com chunks armazenados
-	static HashMap<String, String> filesHash; // HashMap<filename,fileID>
+	static List<FileInfo> filesInfo; // HashMap<filename,fileID>
 	//static Queue<String> userBackupRequests; //String: filename
 	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replicao
 	//static List<StoredtypeMessage> storedMessages;
@@ -32,7 +33,7 @@ public class Peer {
 
 		//Estruturas de Dados
 		backedupChunks = new ArrayList<Chunk>();
-		filesHash = new HashMap<String, String>();
+		filesInfo = new ArrayList<FileInfo>();
 		storedsInfo = new HashMap<Chunk, ArrayList<PeerAddress>>();
 		
 		//TODO fazer set dos enderecos multicast e portos??
@@ -55,7 +56,7 @@ public class Peer {
 		return backedupChunks;
 	}
 	
-	public static void addtoFilesHash(String filename, String fileID) {
+	public static void addtoFilesInfo(String filename, String fileID, int nTotalChunks) {
 		filesHash.put(filename, fileID);
 	}
 	public static HashMap<String, String> getFilesHash() {
@@ -163,7 +164,23 @@ public class Peer {
 	}
 	
 	private static void restoreRequest() throws IOException {
-		
+		Boolean b = true;
+		while(b)
+		{
+			System.out.println("[RESTORE]filename: ");
+			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
+			String filename = Definitions.backupFilesDirectory+inputStream.readLine();
+			
+			File f = new File(filename);
+			if(f.exists() && !f.isDirectory()) //file exists //f.canRead() ? //f.isFile() ?
+			{
+				b = false;
+				FileRestore restore = new FileRestore(filename);
+				
+			}
+			else
+				System.out.println("File not exists, try again!\n");
+		}
 	}
 
 }
