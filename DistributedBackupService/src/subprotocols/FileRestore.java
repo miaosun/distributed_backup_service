@@ -1,18 +1,8 @@
 package subprotocols;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.DatagramPacket;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.security.NoSuchAlgorithmException;
-
 import multicastMsgs.MControlReader;
-import multicastMsgs.MDBackupMsg;
-import multicastMsgs.MDRestoreMsg;
 import utilities.FileSplitter;
-import utilities.SHA256;
 import Peer.Chunk;
 import Peer.Definitions;
 import Peer.FileInfo;
@@ -20,12 +10,11 @@ import Peer.Peer;
 
 public class FileRestore extends Thread {
 
-	public FileRestore(FileInfo finfo) {
+	public FileRestore(FileInfo finfo) throws IOException {
 		// TODO Auto-generated constructor stub
 
 		String fileID = finfo.getFileID();
 		int nTotalChunks = finfo.getnTotalChunks();
-
 
 		MControlReader rMsg = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
 
