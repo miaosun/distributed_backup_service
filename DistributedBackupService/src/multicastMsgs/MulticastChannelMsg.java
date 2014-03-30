@@ -38,21 +38,21 @@ public abstract class MulticastChannelMsg extends Thread {
 	}
 
 
-	public String receivePacket() {
-		try{
-			byte[] data = new byte[64085];
-			DatagramPacket packet = new DatagramPacket(data,data.length);
-			msocket.receive(packet);
-			data = packet.getData();
-
-			String msg = new String(data,0,30000);
-			System.out.println("GETDATA: "+data.length+"  "+msg.getBytes().length);
-			return msg;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "";
-	}
+//	public String receivePacket() {
+//		try{
+//			byte[] data = new byte[64085];
+//			DatagramPacket packet = new DatagramPacket(data,data.length);
+//			msocket.receive(packet);
+//			data = packet.getData();
+//
+//			String msg = new String(data,0,30000);
+//			System.out.println("GETDATA: "+data.length+"  "+msg.getBytes().length);
+//			return msg;
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//		return "";
+//	}
 	
 	public byte[] receivePacketByte() {
 		try{

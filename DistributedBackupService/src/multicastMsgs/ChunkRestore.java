@@ -39,12 +39,11 @@ public class ChunkRestore extends MulticastChannelMsg{
 				}
 
 				if(!Peer.wcAlreadySent(ch)) {
-
 					String stringHeader = "CHUNK " + Definitions.version + " " + fileID + " " + chunkNR;
 					System.out.println("\"Chunk Message sent: "+stringHeader+"\"");
 					stringHeader+=Definitions.CRLF+Definitions.CRLF;
 					byte[] header = stringHeader.getBytes();
-					String chunkFilename = fileID+"."+chunkNR;
+					String chunkFilename = Definitions.backupFilesDirectory+fileID+"."+chunkNR;
 					byte[] body;
 					try {
 						body = Files.readAllBytes(Paths.get(chunkFilename));
