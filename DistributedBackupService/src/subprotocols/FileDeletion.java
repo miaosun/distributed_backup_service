@@ -62,7 +62,6 @@ public class FileDeletion  extends MulticastChannelMsg{
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 	}
 	

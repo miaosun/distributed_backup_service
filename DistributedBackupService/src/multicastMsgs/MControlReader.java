@@ -58,6 +58,9 @@ public class MControlReader extends MulticastChannelMsg {
 			FileDeletion fdeletion= new FileDeletion(fileID, false);
 			fdeletion.start();
 		}
+		else if(cmd.equals("REMOVED")) {
+			
+		}
 		else
 		{
 			System.out.println("MESSAGE IGNORED");
