@@ -28,7 +28,7 @@ public class FileDeletion  extends MulticastChannelMsg{
 			String deleteMsg = "DELETE " + fileID + Definitions.CRLF + Definitions.CRLF;
 			byte[] sendData = new byte[100];
 
-			int count = 5;
+			int count = 3;
 
 			while(count > 0) {
 				sendData = deleteMsg.getBytes();
@@ -53,18 +53,17 @@ public class FileDeletion  extends MulticastChannelMsg{
 		}
 		else {
 			try {
-				String[] filesToDelete = getFileChunkstoDelete(fileID);
+				String[] filesToDelete = getFileChunkstoDelete(Definitions.backupFilesDirectory+fileID);
 				for(String s : filesToDelete) {
-					Files.deleteIfExists(Paths.get(s));
+					Files.deleteIfExists(Paths.get(Definitions.backupFilesDirectory+s));
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 	}
-	
+
 	public static String[] getFileChunkstoDelete(String baseFileID) throws IOException
 	{
 		File directory = new File(baseFileID).getAbsoluteFile().getParentFile();
