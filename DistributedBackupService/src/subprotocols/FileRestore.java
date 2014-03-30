@@ -17,7 +17,6 @@ public class FileRestore extends Thread {
 		String fileID = finfo.getFileID();
 		int nTotalChunks = finfo.getnTotalChunks();
 
-
 		MControlReader rMsg = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
 
 		int count = 0;

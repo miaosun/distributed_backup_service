@@ -23,6 +23,7 @@ public class Peer {
 	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replicao
 	//static List<StoredtypeMessage> storedMessages;
 	static HashMap<Chunk, ArrayList<PeerAddress>> storedsInfo; // informacao chunk->peers
+	static HashMap<Chunk, Boolean> waitingChunksToSend;
 	
 	static Chunk waitingChunk = null;
 	static boolean received = false;
@@ -43,7 +44,7 @@ public class Peer {
 		Peer.received = received;
 	}
 
-
+	
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -54,7 +55,8 @@ public class Peer {
 		backedupChunks = new ArrayList<Chunk>();
 		filesInfo = new ArrayList<FileInfo>();
 		storedsInfo = new HashMap<Chunk, ArrayList<PeerAddress>>();
-
+		waitingChunksToSend = new HashMap<Chunk, Boolean>();
+		
 		//TODO fazer set dos enderecos multicast e portos??
 
 		//lancar thread ler MC
@@ -67,6 +69,18 @@ public class Peer {
 
 		menu();
 	}
+	
+	public static void addWaitingChunk() {
+		
+	}
+	
+	public static void verifyWaitingChunk() {
+		
+	}
+	
+	public static boolean chunkExists(Chunk ch) {
+		return backedupChunks.contains(ch);
+	}
 
 	public static FileInfo existsFile(String fname) {
 		for(FileInfo f : filesInfo ) {
@@ -76,8 +90,6 @@ public class Peer {
 		}
 		return null;
 	}
-
-
 
 	public static int addtoFilesInfo(String filename, String fileID, int nTotalChunks) {
 		for(FileInfo f : filesInfo) {
