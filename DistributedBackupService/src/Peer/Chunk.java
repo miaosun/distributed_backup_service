@@ -19,6 +19,14 @@ public class Chunk {
 		return desiredReplicationNr;
 	}
 
+	public String getFileID() {
+		return fileID;
+	}
+
+	public int getChunkNR() {
+		return chunkNR;
+	}
+
 	public boolean exists() {
 		return Peer.getBackedupChunks().contains(this);	
 	}

@@ -24,6 +24,7 @@ public class Peer {
 	public static Scanner scanner = new Scanner(System.in);
 
 	static List<Chunk> backedupChunks; // Arraylist com chunks armazenados
+
 	static List<FileInfo> filesInfo; // FileInfo(Filename, fileID, nTotalChunks, repDegree)
 	//static Queue<String> userBackupRequests; //String: filename
 	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replicao
@@ -312,7 +313,7 @@ public class Peer {
 			if(chunksToDelete <= backedupChunks.size() && chunksToDelete > 0)
 			{
 				b = false;
-				SpaceReclaiming sReclaiming = new SpaceReclaiming(chunksToDelete);
+				SpaceReclaiming sReclaiming = new SpaceReclaiming(chunksToDelete, true);
 				sReclaiming.start();
 				
 				try {
