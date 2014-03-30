@@ -155,10 +155,10 @@ public class Peer {
 	}
 
 	private static void menu() throws IOException {
+		@SuppressWarnings("resource")
+		Scanner sc = new Scanner(System.in);
 
 		while(true) {		
-			@SuppressWarnings("resource")
-			Scanner sc = new Scanner(System.in);
 
 			System.out.println("Please Make a selection:"); 
 			System.out.println("[1] Send putchunk message"); 
@@ -167,25 +167,22 @@ public class Peer {
 			System.out.println("[3] exit"); 
 
 			System.out.println("Selection: ");
-			int selection=0;
-			try{
-				selection=sc.nextInt();
-			}catch(NoSuchElementException e){}
-
+			String selection="";
+			selection=sc.nextLine();
 
 			switch (selection){
 
-			case 1: 
+			case "1": 
 				System.out.println("*Backup file*");
 				backupRequest();
 				break;
 
-			case 2:
+			case "2":
 				System.out.println("*Restore file*");
 				restoreRequest();
 				break;
 
-			case 3:
+			case "3":
 				System.out.println("Exit Successful");
 				System.exit(0);
 
@@ -221,7 +218,6 @@ public class Peer {
 			else
 				System.out.println("File not exists, try again!\n");
 		}
-
 	}
 
 	private static void restoreRequest() throws IOException {

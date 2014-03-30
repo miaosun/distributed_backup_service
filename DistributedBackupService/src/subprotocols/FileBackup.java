@@ -127,7 +127,6 @@ public class FileBackup extends Thread {
 			else
 				System.out.println("Can't have this number of replications, try again!\n");
 		}
-		sc.close();
 		return 0;
 	}
 
