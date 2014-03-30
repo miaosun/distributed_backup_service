@@ -23,7 +23,6 @@ public class ChunkRestore extends MulticastChannelMsg{
 		Chunk ch = new Chunk(fileID, chunkNR);
 		if(chunkExists(ch)){
 			
-			
 			Random random = new Random();
 			//waits timeout time before sending STORED message
 			int timeout = random.nextInt(401);

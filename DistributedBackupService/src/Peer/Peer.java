@@ -70,12 +70,22 @@ public class Peer {
 		menu();
 	}
 	
-	public static void addWaitingChunk() {
-		
+	public static boolean wcAlreadySent(Chunk ch) {
+		return waitingChunksToSend.get(ch);
+	}
+	public static void wcIsSent(Chunk ch) {
+		waitingChunksToSend.put(ch, true);
 	}
 	
-	public static void verifyWaitingChunk() {
-		
+	public static void insertWaitingChunkToSend(Chunk ch) {
+		waitingChunksToSend.put(ch, false);
+	}
+	public static boolean verifyWaitingChunk(Chunk ch) {
+		if(waitingChunksToSend.containsKey(ch)) {
+			return waitingChunksToSend.get(ch);
+		}
+		else
+			return false;
 	}
 	
 	public static boolean chunkExists(Chunk ch) {
