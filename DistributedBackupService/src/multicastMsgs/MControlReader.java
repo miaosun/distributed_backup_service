@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 
 import Peer.Chunk;
+import Peer.Definitions;
 import Peer.Peer;
 import Peer.PeerAddress;
 
@@ -20,7 +21,8 @@ public class MControlReader extends MulticastChannelMsg {
 	public void processPacket(DatagramPacket packet) {
 		
 		String msg = new String(packet.getData());
-		System.out.println("Message received: "+ msg);
+		
+		System.out.println("Message received: "+msg.substring(0,msg.indexOf(Definitions.CRLF+Definitions.CRLF)));
 		PeerAddress peer = new PeerAddress(packet.getAddress(),packet.getPort());
 		System.out.println("Peer: "+packet.getAddress()+"  "+packet.getPort());
 		

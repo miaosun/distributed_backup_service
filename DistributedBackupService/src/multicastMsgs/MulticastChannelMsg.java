@@ -59,8 +59,10 @@ public abstract class MulticastChannelMsg extends Thread {
 			byte[] data = new byte[64085];
 			DatagramPacket packet = new DatagramPacket(data,data.length);
 			msocket.receive(packet);
-
-			return packet.getData();
+			byte[] receiveD = new byte[packet.getLength()];
+			System.arraycopy(packet.getData(), 0, receiveD, 0, packet.getLength());
+			
+			return receiveD;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

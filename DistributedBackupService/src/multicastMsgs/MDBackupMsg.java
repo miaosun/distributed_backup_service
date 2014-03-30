@@ -70,6 +70,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		// TODO Auto-generated method stub
 		int offset = 0;
 		String header = "";
+		System.out.println("MSG size: "+msg.length);
 		for(int i=0; i<msg.length; i++)
 		{
 			if(msg[i] == Definitions.CRLFseq[0] && msg[i+1] == Definitions.CRLFseq[1] && msg[i+2] == Definitions.CRLFseq[0] && msg[i+3] == Definitions.CRLFseq[1])
@@ -114,8 +115,11 @@ public class MDBackupMsg extends MulticastChannelMsg {
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
-					} //TODO
+					}
 				}
+				else
+					System.out.println("Chunk already backed up");
+				
 				//enviar stored
 				String storedMsg = "STORED" + header.substring(header.indexOf(' ')) + Definitions.CRLF + Definitions.CRLF;
 				try {
