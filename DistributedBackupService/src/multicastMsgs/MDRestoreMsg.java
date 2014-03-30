@@ -1,8 +1,6 @@
 package multicastMsgs;
 
 import java.io.IOException;
-import java.util.Random;
-
 import Peer.Chunk;
 import Peer.Definitions;
 import Peer.Peer;
@@ -17,7 +15,6 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 	@Override
 	public void processMsg(String msg) {}
 
-
 	public Boolean verifyVersion(String version) {
 		if(version.length()==3 && version.substring(1,2).equals(".") && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
 			return true;
@@ -28,7 +25,12 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
+
+		joinMulticastGroup();
+		while(true) {
+			System.out.println("MDR thread waiting for chunk messages...");
+			processMsg(receivePacketByte());
+		}
 
 	}
 

@@ -13,6 +13,7 @@ import subprotocols.FileBackup;
 import subprotocols.FileRestore;
 import multicastMsgs.MControlReader;
 import multicastMsgs.MDBackupMsg;
+import multicastMsgs.MDRestoreMsg;
 
 
 public class Peer {
@@ -24,10 +25,10 @@ public class Peer {
 	//static List<StoredtypeMessage> storedMessages;
 	static HashMap<Chunk, ArrayList<PeerAddress>> storedsInfo; // informacao chunk->peers
 	static HashMap<Chunk, Boolean> waitingChunksToSend;
-	
+
 	static Chunk waitingChunk = null;
 	static boolean received = false;
-	
+
 	public static Chunk getWaitingChunk() {
 		return waitingChunk;
 	}
@@ -44,7 +45,7 @@ public class Peer {
 		Peer.received = received;
 	}
 
-	
+
 	/**
 	 * @param args
 	 * @throws IOException 
@@ -56,7 +57,7 @@ public class Peer {
 		filesInfo = new ArrayList<FileInfo>();
 		storedsInfo = new HashMap<Chunk, ArrayList<PeerAddress>>();
 		waitingChunksToSend = new HashMap<Chunk, Boolean>();
-		
+
 		//TODO fazer set dos enderecos multicast e portos??
 
 		//lancar thread ler MC
@@ -67,16 +68,20 @@ public class Peer {
 		MDBackupMsg mdb = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT);
 		mdb.start();
 
+		//lancar thread ler MDR
+		MDRestoreMsg mdr = new MDRestoreMsg(Definitions.MDRADDRESS, Definitions.MDRPORT);
+		mdr.start();
+
 		menu();
 	}
-	
+
 	public static boolean wcAlreadySent(Chunk ch) {
 		return waitingChunksToSend.get(ch);
 	}
 	public static void wcIsSent(Chunk ch) {
 		waitingChunksToSend.put(ch, true);
 	}
-	
+
 	public static void insertWaitingChunkToSend(Chunk ch) {
 		waitingChunksToSend.put(ch, false);
 	}
@@ -87,7 +92,7 @@ public class Peer {
 		else
 			return false;
 	}
-	
+
 	public static boolean chunkExists(Chunk ch) {
 		return backedupChunks.contains(ch);
 	}
@@ -147,8 +152,6 @@ public class Peer {
 		{
 			return 0;
 		}
-
-
 	}
 
 	private static void menu() throws IOException {
@@ -189,10 +192,8 @@ public class Peer {
 			default:
 				System.out.println("Please enter a valid selection.");
 				break;
-
 			}
 		}
-
 	}
 
 
@@ -230,7 +231,7 @@ public class Peer {
 			System.out.println("[RESTORE]filename: ");
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
 			String filename = Definitions.backupFilesDirectory+inputStream.readLine();
-			
+
 			FileInfo finfo = existsFile(filename);
 			if(finfo != null)
 			{
