@@ -19,7 +19,7 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 		
 		if(cmd.equals("CHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
-
+				
 			}
 		}
 	}

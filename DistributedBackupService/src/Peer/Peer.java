@@ -74,8 +74,10 @@ public class Peer {
 		
 	}
 	
-	public static void verifyWaitingChunk() {
-		
+	public static boolean verifyWaitingChunk(Chunk ch) {
+		if(waitingChunksToSend.containsKey(ch)) {
+			
+		}
 	}
 	
 	public static boolean chunkExists(Chunk ch) {
