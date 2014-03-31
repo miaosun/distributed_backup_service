@@ -49,9 +49,6 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		{
 			joinMulticastGroup();
 			while(true) {
-				//System.out.println("MDB thread waiting for putchunk messages...");
-				//String msg = receivePacket();
-
 				processMsg(receivePacketByte());
 			}
 		}
@@ -97,31 +94,42 @@ public class MDBackupMsg extends MulticastChannelMsg {
 					e.printStackTrace();
 				}
 
-				//verificar se ainda n tem o ficheiro //TODO verificar
-				if(!ch.exists())
-				{
-					//guardar chunk
-					try {
-						ch.saveChunk(body);
-						Peer.addtoStoredsInfo(ch, new PeerAddress(InetAddress.getLocalHost(), 0));
-					} catch (IOException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
+				boolean doIt=true;
+				if(Definitions.version == "2.0") {
+
+					int rdActual = (Peer.getStoredsNr(ch)-ch.getDesiredReplicationNr());
+					if(rdActual>=Definitions.plusRepDegree) {
+						doIt=false;
+						System.out.println("Already have backed up +"+rdActual+" than desired.");
 					}
 				}
-				else
-					System.out.println("Chunk already backed up");
-				
-				//enviar stored
-				String storedMsg = "STORED" + header.substring(header.indexOf(' ')) + Definitions.CRLF + Definitions.CRLF;
-				try {
-					MControlReader MC = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
-					MC.sendMessages(storedMsg);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
 
+				if(doIt)
+				{
+					if(!ch.exists())
+					{
+						//guardar chunk
+						try {
+							ch.saveChunk(body);
+							Peer.addtoStoredsInfo(ch, new PeerAddress(InetAddress.getLocalHost(), 0));
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					else
+						System.out.println("Chunk already backed up");
+
+					//enviar stored
+					String storedMsg = "STORED" + header.substring(header.indexOf(' ')) + Definitions.CRLF + Definitions.CRLF;
+					try {
+						MControlReader MC = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
+						MC.sendMessages(storedMsg);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+				}
 			}
 		}
 		else

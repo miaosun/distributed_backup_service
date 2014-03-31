@@ -29,9 +29,6 @@ public class Peer {
 
 	static List<Chunk> backedupChunks; // Arraylist com chunks armazenados
 	static List<FileInfo> filesInfo; // FileInfo(Filename, fileID, nTotalChunks, repDegree)
-	//static Queue<String> userBackupRequests; //String: filename
-	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replicao
-	//static List<StoredtypeMessage> storedMessages;
 	static HashMap<Chunk, ArrayList<PeerAddress>> storedsInfo; // informacao chunk->peers
 	static HashMap<Chunk, Boolean> waitingChunksToSend;
 	static HashMap<Chunk, Boolean> waitingPutChunksAtReclaiming;
