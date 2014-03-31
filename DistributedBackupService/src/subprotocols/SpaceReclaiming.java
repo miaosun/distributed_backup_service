@@ -40,7 +40,6 @@ public class SpaceReclaiming extends MulticastChannelMsg {
 
 		if(isInitiatorPeer) {
 			
-			String chunkName;
 			for(Chunk ch : Peer.getBackedupChunks()) {
 			System.out.println(":::: "+ch.getFileID()+" "+ch.getChunkNR() );
               }
@@ -58,7 +57,7 @@ public class SpaceReclaiming extends MulticastChannelMsg {
 					}			
 				}
 
-				chunkName = chk.getFileID() + "." + chk.getChunkNR();
+				String chunkName = chk.getFileID() + "." + chk.getChunkNR();
 
 				try {
 					Files.delete(Paths.get(Definitions.backupFilesDirectory+chunkName));
