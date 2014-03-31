@@ -1,6 +1,7 @@
 package Peer;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -396,6 +397,17 @@ public class Peer {
 	}
 
 	
-
-	
+	public static String[] getFileChunkstoDelete(String baseFileID) throws IOException
+	{
+		File directory = new File(baseFileID).getAbsoluteFile().getParentFile();
+		final String justFilename = new File(baseFileID).getName();
+		String[] matchingFiles = directory.list(new FilenameFilter()
+		{
+			public boolean accept(File dir, String name)
+			{
+				return name.startsWith(justFilename);
+			}
+		});
+		return matchingFiles;
+	}
 }
