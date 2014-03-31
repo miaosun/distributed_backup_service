@@ -556,6 +556,7 @@ public class Peer {
 			{
 				line += "|" + pa.getAddress();
 			}
+			line += "\n";
 			lineByte = line.getBytes();
 			saveFile.write(lineByte);
 		}
