@@ -97,7 +97,7 @@ public class SpaceReclaiming extends MulticastChannelMsg {
 					}
 					if(!Peer.wputchunkAlreadySent(removedChunk)) {
 						try {
-							String fileIDx = removedChunk.getFileID();
+							//String fileIDx = removedChunk.getFileID();
 							MDBackupMsg bMsg = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT, removedChunk.getFileID(), removedChunk.getDesiredReplicationNr());
 							String chunkFilename = Definitions.backupFilesDirectory+removedChunk.getFileID()+"."+removedChunk.getChunkNR();
 							byte[] body = Files.readAllBytes(Paths.get(chunkFilename));
