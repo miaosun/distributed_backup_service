@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 
 import subprotocols.FileDeletion;
+import subprotocols.SpaceReclaiming;
 import Peer.Chunk;
 import Peer.Peer;
 import Peer.PeerAddress;
@@ -20,8 +21,8 @@ public class MControlReader extends MulticastChannelMsg {
 
 	public void processPacket(DatagramPacket packet) throws IOException {
 		
-		byte[] message = new byte[packet.getLength()];
-		System.arraycopy(packet.getData(), 0, message, 0, packet.getLength());
+		byte[] message = new byte[packet.getLength()-4];
+		System.arraycopy(packet.getData(), 0, message, 0, packet.getLength()-4);
 		String msg = new String(message);
 		
 		System.out.println("Message received: "+msg.substring(0,msg.length()-4));
@@ -31,16 +32,20 @@ public class MControlReader extends MulticastChannelMsg {
 		System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
-		String fileID = temp[2].trim();
-		int chunkNr = Integer.parseInt(temp[3].trim());
+		String fileID = "";
+		
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
+				fileID = temp[2].trim();
+				int chunkNr = Integer.parseInt(temp[3].trim());
 				Chunk ch = new Chunk(fileID, chunkNr);
 				Peer.addtoStoredsInfo(ch, peer);
 			}
 		}
 		else if(cmd.equals("GETCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
+				fileID = temp[2].trim();
+				int chunkNr = Integer.parseInt(temp[3].trim());
 				ChunkRestore chRestore;
 				try {
 					chRestore = new ChunkRestore(fileID, chunkNr);
@@ -58,8 +63,13 @@ public class MControlReader extends MulticastChannelMsg {
 		}
 		else if(cmd.equals("REMOVED")) {
 			if(verifyVersion(temp[1].trim())) {
-				
-				
+				fileID = temp[2].trim();
+				int chunkNr = Integer.parseInt(temp[3].trim());
+				Chunk ch = new Chunk(fileID, chunkNr);
+				if(Peer.chunkExists(ch)) {
+					SpaceReclaiming s = new SpaceReclaiming();
+					s.start();
+				}
 			}
 		}
 		else

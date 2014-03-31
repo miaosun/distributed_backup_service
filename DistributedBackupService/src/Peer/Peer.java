@@ -29,6 +29,7 @@ public class Peer {
 	//static List<StoredtypeMessage> storedMessages;
 	static HashMap<Chunk, ArrayList<PeerAddress>> storedsInfo; // informacao chunk->peers
 	static HashMap<Chunk, Boolean> waitingChunksToSend;
+	static HashMap<Chunk, Boolean> waitingPutChunksAtReclaiming;
 
 	static Chunk waitingChunk = null;
 	static boolean received = false;
@@ -61,6 +62,7 @@ public class Peer {
 		filesInfo = new ArrayList<FileInfo>();
 		storedsInfo = new HashMap<Chunk, ArrayList<PeerAddress>>();
 		waitingChunksToSend = new HashMap<Chunk, Boolean>();
+		waitingPutChunksAtReclaiming = new HashMap<Chunk, Boolean>();
 
 		//TODO fazer set dos enderecos multicast e portos??
 
@@ -78,7 +80,7 @@ public class Peer {
 
 		menu();
 	}
-	
+
 	public static int getDesiredRepDegByfileID(String fileID) {
 		for(FileInfo f : filesInfo) {
 			if(f.getFileID().equals(fileID)) {
@@ -99,12 +101,15 @@ public class Peer {
 		waitingChunksToSend.put(ch, false);
 	}
 	public static boolean verifyWaitingChunk(Chunk ch) {
-		if(waitingChunksToSend.containsKey(ch)) {
+		if(waitingChunksToSend.containsKey(ch))
 			return waitingChunksToSend.get(ch);
-		}
 		else
 			return false;
 	}
+	
+	
+	
+	
 
 	public static boolean chunkExists(Chunk ch) {
 		return backedupChunks.contains(ch);
@@ -174,9 +179,17 @@ public class Peer {
 			return 0;
 		}
 	}
+	
+	public static void removePeerInHash(Chunk ch, Peer p) {
+		ArrayList<PeerAddress> peerList = storedsInfo.get(ch);
+
+		if(peerList.contains(p)) {
+			peerList.remove(p);
+		}
+	}
 
 	private static void menu() throws IOException {
-		
+
 		while(true) {		
 
 			System.out.println("Please Make a selection:"); 
