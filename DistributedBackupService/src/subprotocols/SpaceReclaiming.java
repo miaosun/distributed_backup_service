@@ -40,7 +40,7 @@ public class SpaceReclaiming extends MulticastChannelMsg {
 
 		if(isInitiatorPeer) {
 			
-			String chunkName="";
+			String chunkName;
 			for(Chunk ch : Peer.getBackedupChunks()) {
 			System.out.println(":::: "+ch.getFileID()+" "+ch.getChunkNR() );
               }
