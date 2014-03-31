@@ -48,15 +48,16 @@ public class SpaceReclaiming extends MulticastChannelMsg {
 				int max = 0;
 				for(Chunk ch : Peer.getBackedupChunks()) {
 					System.out.println(Peer.getStoredsInfo().size());
-					int dif = (ch.getDesiredReplicationNr() - Peer.getStoredsInfo().get(ch).size());
-					
+					int dif = (Peer.getStoredsInfo().get(ch).size() - ch.getDesiredReplicationNr());
+					System.out.println("dif: " + dif);
 					if(dif >= max)
 					{
 						max = dif;
 						chk = ch;
 					}			
 				}
-
+				System.out.println("so para testar: " + Peer.getStoredsInfo().size());
+				System.out.println("chunk null? " + chk.getFileID());
 				chunkName = chk.getFileID() + "." + chk.getChunkNR();
 
 				try {
