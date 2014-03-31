@@ -1,6 +1,8 @@
 package subprotocols;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import multicastMsgs.MControlReader;
 import utilities.FileSplitter;
@@ -59,8 +61,13 @@ public class FileRestore extends Thread {
 				}
 			}
 		}
-		if(count == nTotalChunks)
+		if(count == nTotalChunks) {
 			FileSplitter.join(finfo.getFilename(), Definitions.backupFilesDirectory+fileID, nTotalChunks);
+			String [] ftd = Peer.getFileChunkstoDelete(Definitions.backupFilesDirectory+fileID);
+			for(String s : ftd) {
+				Files.deleteIfExists(Paths.get(Definitions.backupFilesDirectory+s));
+			}
+		}
 		else
 			System.out.println("Nao foi possivel de fazer restore do ficheiro");
 
