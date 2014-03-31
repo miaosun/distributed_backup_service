@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import Peer.Definitions;
+import Peer.Peer;
 
 import multicastMsgs.MulticastChannelMsg;
 
@@ -44,17 +45,16 @@ public class FileDeletion  extends MulticastChannelMsg{
 			}
 			//delete file
 			try {
-				Files.deleteIfExists(Paths.get(Peer.Peer.getFilenameByFileID(fileID)));
+				Files.deleteIfExists(Paths.get(Peer.getFilenameByFileID(fileID)));
 				System.out.println("File deleted successfully.");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
 		else {
 			try {
-				String[] filesToDelete = getFileChunkstoDelete(Definitions.backupFilesDirectory+fileID);
+				String[] filesToDelete = Peer.getFileChunkstoDelete(Definitions.backupFilesDirectory+fileID);
 				for(String s : filesToDelete) {
 					System.out.println("Deleting File: " + s);
 					Files.deleteIfExists(Paths.get(Definitions.backupFilesDirectory+s));
@@ -64,20 +64,6 @@ public class FileDeletion  extends MulticastChannelMsg{
 				e.printStackTrace();
 			}
 		}
-	}
-
-	public static String[] getFileChunkstoDelete(String baseFileID) throws IOException
-	{
-		File directory = new File(baseFileID).getAbsoluteFile().getParentFile();
-		final String justFilename = new File(baseFileID).getName();
-		String[] matchingFiles = directory.list(new FilenameFilter()
-		{
-			public boolean accept(File dir, String name)
-			{
-				return name.startsWith(justFilename);
-			}
-		});
-		return matchingFiles;
 	}
 
 }
