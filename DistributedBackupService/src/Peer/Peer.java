@@ -35,6 +35,10 @@ public class Peer {
 	static Chunk waitingChunk = null;
 	static boolean received = false;
 
+	public static HashMap<Chunk, ArrayList<PeerAddress>> getStoredsInfo() {
+		return storedsInfo;
+	}
+	
 	public static Chunk getWaitingChunk() {
 		return waitingChunk;
 	}
