@@ -28,7 +28,7 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 
 		joinMulticastGroup();
 		while(true) {
-			System.out.println("MDR thread waiting for chunk messages...");
+			//System.out.println("MDR thread waiting for chunk messages...");
 			byte[] data = new byte[65000];
 			data = receivePacketByte();
 			processMsg(data);

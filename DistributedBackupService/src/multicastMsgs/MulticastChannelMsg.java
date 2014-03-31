@@ -95,7 +95,6 @@ public abstract class MulticastChannelMsg extends Thread {
 	}
 
 	public void run() {
-		System.out.println("at MCmsg run");
 		
 	}
 

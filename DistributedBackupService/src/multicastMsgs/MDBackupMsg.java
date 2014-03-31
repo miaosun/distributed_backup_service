@@ -61,7 +61,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		{
 			joinMulticastGroup();
 			while(true) {
-				System.out.println("MDB thread waiting for putchunk messages...");
+				//System.out.println("MDB thread waiting for putchunk messages...");
 				//String msg = receivePacket();
 
 				processMsg(receivePacketByte());

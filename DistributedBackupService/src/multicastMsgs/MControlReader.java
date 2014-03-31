@@ -99,7 +99,7 @@ public class MControlReader extends MulticastChannelMsg {
 	}
 
 	public void run() {
-		System.out.println("Running MC Reader...");
+		//System.out.println("Running MC Reader...");
 		//ciclo leitura MC
 		joinMulticastGroup();
 		while(true) {

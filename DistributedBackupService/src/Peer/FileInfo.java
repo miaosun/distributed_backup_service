@@ -2,7 +2,9 @@ package Peer;
 
 public class FileInfo {
 	String filename;
+	String fileID;
 	int replicationDegree;
+	int nTotalChunks;
 	
 	public String getFilename() {
 		return filename;
@@ -27,9 +29,6 @@ public class FileInfo {
 	public void setnTotalChunks(int nTotalChunks) {
 		this.nTotalChunks = nTotalChunks;
 	}
-
-	String fileID;
-	int nTotalChunks;
 	
 	public FileInfo(String filename, String fileID, int nTotalChunks, int repdegree) {
 		this.filename = filename;

@@ -1,9 +1,14 @@
 package Peer;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -17,7 +22,6 @@ import subprotocols.SpaceReclaiming;
 import multicastMsgs.MControlReader;
 import multicastMsgs.MDBackupMsg;
 import multicastMsgs.MDRestoreMsg;
-
 
 public class Peer {
 
@@ -39,7 +43,7 @@ public class Peer {
 	public static HashMap<Chunk, ArrayList<PeerAddress>> getStoredsInfo() {
 		return storedsInfo;
 	}
-	
+
 	public static Chunk getWaitingChunk() {
 		return waitingChunk;
 	}
@@ -62,6 +66,27 @@ public class Peer {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
+
+		if(args.length >=6) {
+			Definitions.setMCADDRESS(args[0]);
+			Definitions.setMCPORT(Integer.parseInt(args[1]));
+			Definitions.setMDBADDRESS(args[2]);
+			Definitions.setMDBPORT(Integer.parseInt(args[3]));
+			Definitions.setMDRADDRESS(args[4]);
+			Definitions.setMDRPORT(Integer.parseInt(args[5]));
+			if(args.length==7) {
+				Definitions.setVersion(args[6]);
+			}
+			System.out.println("Address/Ports:");
+		}
+		else
+		{
+			System.out.println("Default Address/Ports:");
+		}
+		System.out.println("MC: "+Definitions.MCADDRESS+" : "+Definitions.MCPORT);
+		System.out.println("MDB: "+Definitions.MDBADDRESS+" : "+Definitions.MDBPORT);
+		System.out.println("MDR: "+Definitions.MDRADDRESS+" : "+Definitions.MDRPORT);
+
 
 		//Estruturas de Dados
 		backedupChunks = new ArrayList<Chunk>();
@@ -112,7 +137,7 @@ public class Peer {
 		else
 			return false;
 	}
-	
+
 	//SPACE RECLAIMING
 	public static void insertwaitingPutChunk(Chunk ch) {
 		waitingPutChunksAtReclaiming.put(ch, false);
@@ -126,8 +151,8 @@ public class Peer {
 	public static boolean wputchunkAlreadySent(Chunk ch) {
 		return waitingPutChunksAtReclaiming.get(ch);
 	}
-	
-	
+
+
 
 	public static boolean chunkExists(Chunk ch) {
 		return backedupChunks.contains(ch);
@@ -200,7 +225,7 @@ public class Peer {
 			return 0;
 		}
 	}
-	
+
 	public static void removePeerInHash(Chunk ch, PeerAddress p) {
 		ArrayList<PeerAddress> peerList = storedsInfo.get(ch);
 
@@ -208,7 +233,7 @@ public class Peer {
 			peerList.remove(p);
 		}
 	}
-	
+
 	//return true se nr de peers com removedChunk >= desiredReplicationDegree
 	public static boolean verifyDesiredRepDegree(Chunk removedChunk) {
 		int listsize = (storedsInfo.get(removedChunk)).size();
@@ -229,7 +254,7 @@ public class Peer {
 
 		while(true) {		
 
-			System.out.println("Please Make a selection:"); 
+			System.out.println("\n\nPlease Make a selection:"); 
 			System.out.println("[1] Send putchunk message"); 
 			System.out.println("[2] Restore a file:"); 
 			System.out.println("[3] Delete a file:");
@@ -259,12 +284,12 @@ public class Peer {
 				System.out.println("*Delete File*");
 				deleteFileRequest();
 				break;
-				
+
 			case 4:
 				System.out.println("*Space Reclaiming*");
 				spaceReclaimingRequest();
 				break;
-				
+
 			case 5:
 				System.out.println("Exit Successful");
 				System.exit(0);
@@ -350,7 +375,7 @@ public class Peer {
 		}
 
 	}
-	
+
 	private static void spaceReclaimingRequest() throws IOException {
 		Boolean b = true;
 		while(b)
@@ -363,7 +388,7 @@ public class Peer {
 				b = false;
 				SpaceReclaiming sReclaiming = new SpaceReclaiming(chunksToDelete);
 				sReclaiming.start();
-				
+
 				try {
 					sReclaiming.join();
 				} catch (InterruptedException e) {
@@ -396,7 +421,7 @@ public class Peer {
 		return 0;
 	}
 
-	
+
 	public static String[] getFileChunkstoDelete(String baseFileID) throws IOException
 	{
 		File directory = new File(baseFileID).getAbsoluteFile().getParentFile();
@@ -409,5 +434,79 @@ public class Peer {
 			}
 		});
 		return matchingFiles;
+	}
+
+
+	// LOAD FILES
+	public static void loadFiles() {
+		try {
+			loadBackedupChunks();
+			loadFilesInfo();
+			loadStoredsInfo();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	public static void loadBackedupChunks() throws IOException {
+		File bChunks = new File("backedupChunks.txt");
+		FileReader reader = new FileReader(bChunks);
+		BufferedReader breader = new BufferedReader(reader);
+
+		String line="";
+		while (true){
+			line = breader.readLine();
+			if(line != null) {
+				String[] chunkInfo = line.split("|");
+				Chunk c = new Chunk(chunkInfo[0], Integer.parseInt(chunkInfo[1]), Integer.parseInt(chunkInfo[2]));
+				Peer.backedupChunks.add(c);
+			}
+			else
+				break;
+		}
+		breader.close();
+	}
+	public static void loadFilesInfo() throws IOException {
+		File finfo = new File("filesInfo.txt");
+		FileReader reader = new FileReader(finfo);
+		BufferedReader breader = new BufferedReader(reader);
+
+		String line="";
+		while (true){
+			line = breader.readLine();
+			if(line != null) {
+				String[] filesInfo = line.split("|");
+				FileInfo f = new FileInfo(filesInfo[0], filesInfo[1], Integer.parseInt(filesInfo[3]),Integer.parseInt(filesInfo[2]));
+				Peer.filesInfo.add(f);
+			}
+			else
+				break;
+		}
+		breader.close();
+	}
+	public static void loadStoredsInfo() throws IOException {
+		File sinfo = new File("storesdsInfo.txt");
+		FileReader reader = new FileReader(sinfo);
+		BufferedReader breader = new BufferedReader(reader);
+
+		String line="";
+		while (true){
+			line = breader.readLine();
+			if(line != null) {
+				String[] sInfo = line.split("|");
+				int nrA = (sInfo.length-3);
+				Chunk c = new Chunk(sInfo[0], Integer.parseInt(sInfo[1]), Integer.parseInt(sInfo[2]));
+				ArrayList<PeerAddress> plist = new ArrayList<PeerAddress>();
+				for(int i=0; i<nrA;i++) {
+					InetAddress ad = InetAddress.getByName(sInfo[3+i]);
+					PeerAddress p = new PeerAddress(ad, 0);
+					plist.add(p);
+				}
+				storedsInfo.put(c, plist);
+			}
+			else
+				break;
+		}
+		breader.close();
 	}
 }
