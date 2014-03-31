@@ -56,6 +56,7 @@ public class FileDeletion  extends MulticastChannelMsg{
 				for(String s : filesToDelete) {
 					System.out.println("Deleting File: " + s);
 					Files.deleteIfExists(Paths.get(Definitions.backupFilesDirectory+s));
+					
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

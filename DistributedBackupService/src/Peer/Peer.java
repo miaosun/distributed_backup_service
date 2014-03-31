@@ -1,11 +1,8 @@
 package Peer;
 import java.io.BufferedReader;
 import java.io.File;
-
 import java.io.FileReader;
-
 import java.io.FileOutputStream;
-
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -197,6 +194,7 @@ public class Peer {
 	}
 	public static void removeBackedupChunk(Chunk c) {
 		backedupChunks.remove(c);
+		storedsInfo.remove(c);
 	}
 	public static List<Chunk> getBackedupChunks() {
 		return backedupChunks;
@@ -578,4 +576,5 @@ public class Peer {
 		System.out.println("storedsInfo file saved!");
 		saveFile.close();				
 	}
+
 }
