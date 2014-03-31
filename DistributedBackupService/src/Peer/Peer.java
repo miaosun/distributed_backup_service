@@ -1,12 +1,14 @@
 package Peer;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 
@@ -266,6 +268,9 @@ public class Peer {
 				break;
 				
 			case 5:
+				saveBackedupChunks();
+				saveFilesInfo();
+				savestoredsInfo();
 				System.out.println("Exit Successful");
 				System.exit(0);
 
@@ -410,4 +415,51 @@ public class Peer {
 		});
 		return matchingFiles;
 	}
+	
+	public static void saveBackedupChunks() throws IOException
+	{
+		FileOutputStream saveFile = new FileOutputStream("backedupChunks.txt");
+		String line = "";
+		byte[] lineByte = new byte[1024];
+		for(Chunk ch : backedupChunks)
+		{
+			line = ch.getFileID() + "|" + ch.getChunkNR() + "|" + ch.getDesiredReplicationNr() + "\n";
+			lineByte = line.getBytes();
+			saveFile.write(lineByte);
+		}
+		saveFile.close();				
+	}
+	
+	public static void saveFilesInfo() throws IOException
+	{
+		FileOutputStream saveFile = new FileOutputStream("filesInfo.txt");
+		String line = "";
+		byte[] lineByte = new byte[1024];
+		for(FileInfo finfo : filesInfo)
+		{
+			line = finfo.getFilename() + "|" + finfo.getFileID() + "|" + finfo.getReplicationDegree() + "|" + finfo.getnTotalChunks() + "\n";
+			lineByte = line.getBytes();
+			saveFile.write(lineByte);
+		}
+		saveFile.close();				
+	}
+	
+	public static void savestoredsInfo() throws IOException
+	{
+		FileOutputStream saveFile = new FileOutputStream("storedsInfo.txt");
+		String line = "";
+		byte[] lineByte = new byte[1024];
+		for(Map.Entry<Chunk, ArrayList<PeerAddress>> entry : storedsInfo.entrySet())
+		{
+			line = entry.getKey().getFileID() + "|" + entry.getKey().getChunkNR() + "|" + entry.getKey().getDesiredReplicationNr();
+			for(PeerAddress pa : entry.getValue())
+			{
+				line += "|" + pa.getAddress();
+			}
+			lineByte = line.getBytes();
+			saveFile.write(lineByte);
+		}
+		saveFile.close();				
+	}
+	
 }
