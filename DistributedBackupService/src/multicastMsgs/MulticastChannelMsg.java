@@ -36,23 +36,6 @@ public abstract class MulticastChannelMsg extends Thread {
 			e.printStackTrace();
 		}
 	}
-
-
-//	public String receivePacket() {
-//		try{
-//			byte[] data = new byte[64085];
-//			DatagramPacket packet = new DatagramPacket(data,data.length);
-//			msocket.receive(packet);
-//			data = packet.getData();
-//
-//			String msg = new String(data,0,30000);
-//			System.out.println("GETDATA: "+data.length+"  "+msg.getBytes().length);
-//			return msg;
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//		return "";
-//	}
 	
 	public byte[] receivePacketByte() {
 		try{
@@ -80,9 +63,6 @@ public abstract class MulticastChannelMsg extends Thread {
 
 		try{
 			DatagramSocket socket = new DatagramSocket();
-			//byte[] buffer = new byte[msg.length()];
-			//buffer = msg.getBytes();
-
 			DatagramPacket sendPacket = new DatagramPacket(buffer, buffer.length, maddress, port);
 			socket.send(sendPacket);
 			socket.close();
@@ -90,8 +70,14 @@ public abstract class MulticastChannelMsg extends Thread {
 			e.printStackTrace();
 		}
 	}
+	
 
-	public void processMsg(String msg) {
+	public Boolean verifyVersion(String version) {
+		if(version.length()==3 && version.substring(1,2).equals(".") && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
+			return true;
+		}
+		else
+			return false;
 	}
 
 	public void run() {

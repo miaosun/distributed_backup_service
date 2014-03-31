@@ -44,18 +44,6 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		}
 	}
 
-	@Override
-	public void processMsg(String msg) {}
-
-	public Boolean verifyVersion(String version) {
-		if(version.length()==3 && version.substring(1,2).equals(".") && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
-			return true;
-		}
-		else
-			return false;
-	}
-
-
 	public void run() {
 		if(!initiatorPeer)  //MDB Reader
 		{
@@ -116,7 +104,6 @@ public class MDBackupMsg extends MulticastChannelMsg {
 					try {
 						ch.saveChunk(body);
 						Peer.addtoStoredsInfo(ch, new PeerAddress(InetAddress.getLocalHost(), 0));
-						System.out.println(":::::::: "+Peer.getStoredsInfo().size());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
