@@ -25,11 +25,11 @@ public class MControlReader extends MulticastChannelMsg {
 		System.arraycopy(packet.getData(), 0, message, 0, packet.getLength()-4);
 		String msg = new String(message);
 		
-		System.out.println("Message received: "+msg.substring(0,msg.length()));
+		System.out.println("Message received: "+msg.substring(0,msg.length())+" > from: "+packet.getAddress());
 		PeerAddress peer = new PeerAddress(packet.getAddress(),packet.getPort());
-		System.out.println("by Peer: "+packet.getAddress()+"  "+packet.getPort());
+		//System.out.println("by Peer: "+packet.getAddress()+"  "+packet.getPort());
 		
-		System.out.println("MCReader-> Process Message");
+		//System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
 		String fileID;
