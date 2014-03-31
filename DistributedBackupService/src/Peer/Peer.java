@@ -24,13 +24,13 @@ public class Peer {
 	public static Scanner scanner = new Scanner(System.in);
 
 	static List<Chunk> backedupChunks; // Arraylist com chunks armazenados
-
 	static List<FileInfo> filesInfo; // FileInfo(Filename, fileID, nTotalChunks, repDegree)
 	//static Queue<String> userBackupRequests; //String: filename
 	//static HashMap<Chunk, Integer> chunksRepDegree; // HashMap com graus de replicao
 	//static List<StoredtypeMessage> storedMessages;
 	static HashMap<Chunk, ArrayList<PeerAddress>> storedsInfo; // informacao chunk->peers
 	static HashMap<Chunk, Boolean> waitingChunksToSend;
+	static HashMap<Chunk, Boolean> waitingPutChunksAtReclaiming;
 
 	static Chunk waitingChunk = null;
 	static boolean received = false;
@@ -67,6 +67,7 @@ public class Peer {
 		filesInfo = new ArrayList<FileInfo>();
 		storedsInfo = new HashMap<Chunk, ArrayList<PeerAddress>>();
 		waitingChunksToSend = new HashMap<Chunk, Boolean>();
+		waitingPutChunksAtReclaiming = new HashMap<Chunk, Boolean>();
 
 		//TODO fazer set dos enderecos multicast e portos??
 
@@ -84,7 +85,7 @@ public class Peer {
 
 		menu();
 	}
-	
+
 	public static int getDesiredRepDegByfileID(String fileID) {
 		for(FileInfo f : filesInfo) {
 			if(f.getFileID().equals(fileID)) {
@@ -105,12 +106,27 @@ public class Peer {
 		waitingChunksToSend.put(ch, false);
 	}
 	public static boolean verifyWaitingChunk(Chunk ch) {
-		if(waitingChunksToSend.containsKey(ch)) {
+		if(waitingChunksToSend.containsKey(ch))
 			return waitingChunksToSend.get(ch);
-		}
 		else
 			return false;
 	}
+	
+	//SPACE RECLAIMING
+	public static void insertwaitingPutChunk(Chunk ch) {
+		waitingPutChunksAtReclaiming.put(ch, false);
+	}
+	public static boolean verifycontainsWaitingPutChunk(Chunk ch) {
+		if(waitingPutChunksAtReclaiming.containsKey(ch))
+			return waitingPutChunksAtReclaiming.get(ch);
+		else
+			return false;
+	}
+	public static boolean wputchunkAlreadySent(Chunk ch) {
+		return waitingPutChunksAtReclaiming.get(ch);
+	}
+	
+	
 
 	public static boolean chunkExists(Chunk ch) {
 		return backedupChunks.contains(ch);
@@ -151,6 +167,9 @@ public class Peer {
 	public static void addBackedupChunk(Chunk newchunk) {
 		backedupChunks.add(newchunk);
 	}
+	public static void removeBackedupChunk(Chunk c) {
+		backedupChunks.remove(c);
+	}
 	public static List<Chunk> getBackedupChunks() {
 		return backedupChunks;
 	}
@@ -180,9 +199,33 @@ public class Peer {
 			return 0;
 		}
 	}
+	
+	public static void removePeerInHash(Chunk ch, PeerAddress p) {
+		ArrayList<PeerAddress> peerList = storedsInfo.get(ch);
+
+		if(peerList.contains(p)) {
+			peerList.remove(p);
+		}
+	}
+	
+	//return true se nr de peers com removedChunk >= desiredReplicationDegree
+	public static boolean verifyDesiredRepDegree(Chunk removedChunk) {
+		int listsize = (storedsInfo.get(removedChunk)).size();
+		int drepdeg=0;
+		for(Chunk c : backedupChunks) {
+			if(c.equals(removedChunk)) {
+				drepdeg=c.getDesiredReplicationNr();
+				break;
+			}
+		}
+		if(listsize < drepdeg)
+			return false;
+		else
+			return true;
+	}
 
 	private static void menu() throws IOException {
-		
+
 		while(true) {		
 
 			System.out.println("Please Make a selection:"); 
@@ -317,7 +360,7 @@ public class Peer {
 			if(chunksToDelete <= backedupChunks.size() && chunksToDelete > 0)
 			{
 				b = false;
-				SpaceReclaiming sReclaiming = new SpaceReclaiming(chunksToDelete, true);
+				SpaceReclaiming sReclaiming = new SpaceReclaiming(chunksToDelete);
 				sReclaiming.start();
 				
 				try {
@@ -351,4 +394,8 @@ public class Peer {
 		}
 		return 0;
 	}
+
+	
+
+	
 }
