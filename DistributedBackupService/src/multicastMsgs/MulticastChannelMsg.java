@@ -15,7 +15,7 @@ public abstract class MulticastChannelMsg extends Thread {
 	boolean initiatorPeer;
 
 	public MulticastChannelMsg(String adr, int port) throws IOException {
-		super("MulticastChannel");
+		super("MulticastChannelMsg");
 		this.adr = adr;
 		this.port = port;
 		msocket = new MulticastSocket(port);
