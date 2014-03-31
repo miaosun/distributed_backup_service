@@ -45,7 +45,8 @@ public class FileBackup extends Thread {
 				else
 				{
 					System.out.println("BACKUP JA REALIZADO MAS HOUVE ALTERACOES!");
-					//TODO file deletion antes de backup
+					FileDeletion f2 = new FileDeletion(fileID, true);
+					f2.start();
 					canGo=true;
 				}
 			}

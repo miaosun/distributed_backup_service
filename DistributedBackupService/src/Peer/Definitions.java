@@ -19,6 +19,8 @@ public class Definitions {
 		public static String version = "1.0";
 		
 		public final static String backupFilesDirectory = "backup_files/";
+		
+		public final static int plusRepDegree = 1;
 
 		public static void setMCPORT(int mCPORT) {
 			MCPORT = mCPORT;
