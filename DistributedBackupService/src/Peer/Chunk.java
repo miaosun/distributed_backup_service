@@ -7,10 +7,24 @@ public class Chunk {
 
 	String fileID;
 	int chunkNR;
+	int desiredReplicationNr;
 
-	public Chunk(String fileID, int chunkNR) {
+	public Chunk(String fileID, int chunkNR, int desiredReplicatinNr) {
 		this.fileID=fileID;
 		this.chunkNR=chunkNR;
+		this.desiredReplicationNr = desiredReplicatinNr;
+	}
+
+	public int getDesiredReplicationNr() {
+		return desiredReplicationNr;
+	}
+
+	public String getFileID() {
+		return fileID;
+	}
+
+	public int getChunkNR() {
+		return chunkNR;
 	}
 
 	public boolean exists() {

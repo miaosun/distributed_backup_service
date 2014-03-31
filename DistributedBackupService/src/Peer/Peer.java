@@ -12,6 +12,7 @@ import java.util.Scanner;
 import subprotocols.FileBackup;
 import subprotocols.FileDeletion;
 import subprotocols.FileRestore;
+import subprotocols.SpaceReclaiming;
 import multicastMsgs.MControlReader;
 import multicastMsgs.MDBackupMsg;
 import multicastMsgs.MDRestoreMsg;
@@ -107,7 +108,19 @@ public class Peer {
 			return false;
 	}
 	
-	
+	//SPACE RECLAIMING
+	public static void insertwaitingPutChunk(Chunk ch) {
+		waitingPutChunksAtReclaiming.put(ch, false);
+	}
+	public static boolean verifycontainsWaitingPutChunk(Chunk ch) {
+		if(waitingPutChunksAtReclaiming.containsKey(ch))
+			return waitingPutChunksAtReclaiming.get(ch);
+		else
+			return false;
+	}
+	public static boolean wputchunkAlreadySent(Chunk ch) {
+		return waitingPutChunksAtReclaiming.get(ch);
+	}
 	
 	
 
@@ -150,6 +163,9 @@ public class Peer {
 	public static void addBackedupChunk(Chunk newchunk) {
 		backedupChunks.add(newchunk);
 	}
+	public static void removeBackedupChunk(Chunk c) {
+		backedupChunks.remove(c);
+	}
 	public static List<Chunk> getBackedupChunks() {
 		return backedupChunks;
 	}
@@ -180,12 +196,28 @@ public class Peer {
 		}
 	}
 	
-	public static void removePeerInHash(Chunk ch, Peer p) {
+	public static void removePeerInHash(Chunk ch, PeerAddress p) {
 		ArrayList<PeerAddress> peerList = storedsInfo.get(ch);
 
 		if(peerList.contains(p)) {
 			peerList.remove(p);
 		}
+	}
+	
+	//return true se nr de peers com removedChunk >= desiredReplicationDegree
+	public static boolean verifyDesiredRepDegree(Chunk removedChunk) {
+		int listsize = (storedsInfo.get(removedChunk)).size();
+		int drepdeg=0;
+		for(Chunk c : backedupChunks) {
+			if(c.equals(removedChunk)) {
+				drepdeg=c.getDesiredReplicationNr();
+				break;
+			}
+		}
+		if(listsize < drepdeg)
+			return false;
+		else
+			return true;
 	}
 
 	private static void menu() throws IOException {
@@ -196,7 +228,8 @@ public class Peer {
 			System.out.println("[1] Send putchunk message"); 
 			System.out.println("[2] Restore a file:"); 
 			System.out.println("[3] Delete a file:");
-			System.out.println("[4] Exit"); 
+			System.out.println("[4] Space Reclaiming:");
+			System.out.println("[5] Exit"); 
 
 			System.out.println("Selection: ");
 
@@ -221,7 +254,13 @@ public class Peer {
 				System.out.println("*Delete File*");
 				deleteFileRequest();
 				break;
+				
 			case 4:
+				System.out.println("*Space Reclaiming*");
+				spaceReclaimingRequest();
+				break;
+				
+			case 5:
 				System.out.println("Exit Successful");
 				System.exit(0);
 
@@ -306,6 +345,32 @@ public class Peer {
 		}
 
 	}
+	
+	private static void spaceReclaimingRequest() throws IOException {
+		Boolean b = true;
+		while(b)
+		{
+			System.out.println("How many chunks to delete? ");
+
+			int chunksToDelete = scanner.nextInt();
+			if(chunksToDelete <= backedupChunks.size() && chunksToDelete > 0)
+			{
+				b = false;
+				SpaceReclaiming sReclaiming = new SpaceReclaiming(chunksToDelete);
+				sReclaiming.start();
+				
+				try {
+					sReclaiming.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			else
+				System.out.println("File hasn't been backed up, try again!\n");
+		}
+
+	}
 
 	private static int getReplicationDeg() throws IOException {
 		Boolean b = true;
@@ -325,4 +390,8 @@ public class Peer {
 		}
 		return 0;
 	}
+
+	
+
+	
 }

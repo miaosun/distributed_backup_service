@@ -38,7 +38,8 @@ public class MControlReader extends MulticastChannelMsg {
 			if(verifyVersion(temp[1].trim())) {
 				fileID = temp[2].trim();
 				int chunkNr = Integer.parseInt(temp[3].trim());
-				Chunk ch = new Chunk(fileID, chunkNr);
+				int desiredRepDeg = Peer.getDesiredRepDegByfileID(fileID);
+				Chunk ch = new Chunk(fileID, chunkNr, desiredRepDeg);
 				Peer.addtoStoredsInfo(ch, peer);
 			}
 		}
@@ -48,7 +49,8 @@ public class MControlReader extends MulticastChannelMsg {
 				int chunkNr = Integer.parseInt(temp[3].trim());
 				ChunkRestore chRestore;
 				try {
-					chRestore = new ChunkRestore(fileID, chunkNr);
+					int desiredRepDeg = Peer.getDesiredRepDegByfileID(fileID);
+					chRestore = new ChunkRestore(fileID, chunkNr, desiredRepDeg);
 					chRestore.start();
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
@@ -65,10 +67,15 @@ public class MControlReader extends MulticastChannelMsg {
 			if(verifyVersion(temp[1].trim())) {
 				fileID = temp[2].trim();
 				int chunkNr = Integer.parseInt(temp[3].trim());
-				Chunk ch = new Chunk(fileID, chunkNr);
+				int desiredRepDeg = Peer.getDesiredRepDegByfileID(fileID);
+				Chunk ch = new Chunk(fileID, chunkNr, desiredRepDeg);
 				if(Peer.chunkExists(ch)) {
-					SpaceReclaiming s = new SpaceReclaiming();
+					SpaceReclaiming s = new SpaceReclaiming(ch, peer);
 					s.start();
+				}
+				else
+				{
+					System.out.println("Don't have that Chunk");
 				}
 			}
 		}

@@ -28,7 +28,8 @@ public class FileRestore extends Thread {
 			byte[] sendData = new byte[100];
 			
 			sendData = getChunkMsg.getBytes();
-			Chunk ch = new Chunk(fileID, chunknr);
+			int desiredRepDeg = Peer.getDesiredRepDegByfileID(fileID);
+			Chunk ch = new Chunk(fileID, chunknr, desiredRepDeg);
 			
 			long waitTime = 500;
 			int attempts = 5;
