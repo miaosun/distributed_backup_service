@@ -255,7 +255,7 @@ public class Peer {
 	private static void menu() throws IOException {
 
 		while(true) {		
-			loadFiles();
+			//loadFiles();
 			System.out.println("\n\nPlease Make a selection:"); 
 			System.out.println("[1] Send putchunk message"); 
 			System.out.println("[2] Restore a file:"); 
