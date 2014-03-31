@@ -1,9 +1,12 @@
 package multicastMsgs;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.util.Random;
 
 import Peer.Chunk;
 import Peer.Definitions;
+import Peer.Peer;
+import Peer.PeerAddress;
 
 //MDB Reader
 public class MDBackupMsg extends MulticastChannelMsg {
@@ -112,6 +115,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 					//guardar chunk
 					try {
 						ch.saveChunk(body);
+						Peer.addtoStoredsInfo(ch, new PeerAddress(InetAddress.getLocalHost(), 0));
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
