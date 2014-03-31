@@ -255,7 +255,7 @@ public class Peer {
 	private static void menu() throws IOException {
 
 		while(true) {		
-
+			loadFiles();
 			System.out.println("\n\nPlease Make a selection:"); 
 			System.out.println("[1] Send putchunk message"); 
 			System.out.println("[2] Restore a file:"); 
@@ -293,9 +293,7 @@ public class Peer {
 				break;
 
 			case 5:
-				saveBackedupChunks();
-				saveFilesInfo();
-				savestoredsInfo();
+				saveFiles();
 				System.out.println("Exit Successful");
 				System.exit(0);
 
@@ -461,13 +459,15 @@ public class Peer {
 		while (true){
 			line = breader.readLine();
 			if(line != null) {
-				String[] chunkInfo = line.split("|");
-				Chunk c = new Chunk(chunkInfo[0], Integer.parseInt(chunkInfo[1]), Integer.parseInt(chunkInfo[2]));
+				String[] chunkInfo = line.split(" ");
+				Chunk c = new Chunk(chunkInfo[0], Integer.parseInt(chunkInfo[1]), Integer.parseInt(chunkInfo[2].trim()));
+				
 				Peer.backedupChunks.add(c);
 			}
 			else
 				break;
 		}
+		System.out.println("backedupChunks file loaded!");
 		breader.close();
 	}
 	public static void loadFilesInfo() throws IOException {
@@ -479,17 +479,18 @@ public class Peer {
 		while (true){
 			line = breader.readLine();
 			if(line != null) {
-				String[] filesInfo = line.split("|");
+				String[] filesInfo = line.split(" ");
 				FileInfo f = new FileInfo(filesInfo[0], filesInfo[1], Integer.parseInt(filesInfo[3]),Integer.parseInt(filesInfo[2]));
 				Peer.filesInfo.add(f);
 			}
 			else
 				break;
 		}
+		System.out.println("filesInfo file loaded!");
 		breader.close();
 	}
 	public static void loadStoredsInfo() throws IOException {
-		File sinfo = new File("storesdsInfo.txt");
+		File sinfo = new File("storedsInfo.txt");
 		FileReader reader = new FileReader(sinfo);
 		BufferedReader breader = new BufferedReader(reader);
 
@@ -497,12 +498,12 @@ public class Peer {
 		while (true){
 			line = breader.readLine();
 			if(line != null) {
-				String[] sInfo = line.split("|");
+				String[] sInfo = line.split(" ");
 				int nrA = (sInfo.length-3);
 				Chunk c = new Chunk(sInfo[0], Integer.parseInt(sInfo[1]), Integer.parseInt(sInfo[2]));
 				ArrayList<PeerAddress> plist = new ArrayList<PeerAddress>();
 				for(int i=0; i<nrA;i++) {
-					InetAddress ad = InetAddress.getByName(sInfo[3+i]);
+					InetAddress ad = InetAddress.getByName(sInfo[3+i].substring(sInfo[3+i].indexOf('/')+1));
 					PeerAddress p = new PeerAddress(ad, 0);
 					plist.add(p);
 				}
@@ -511,11 +512,23 @@ public class Peer {
 			else
 				break;
 		}
+		System.out.println("storedsInfo file loaded!");
 		breader.close();
 	}
 
 
 	// SAVE FILES
+	// LOAD FILES
+	public static void saveFiles() {
+		try {
+			saveBackedupChunks();
+			saveFilesInfo();
+			savestoredsInfo();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	public static void saveBackedupChunks() throws IOException
 	{
 		FileOutputStream saveFile = new FileOutputStream("backedupChunks.txt");
@@ -523,10 +536,11 @@ public class Peer {
 		byte[] lineByte = new byte[1024];
 		for(Chunk ch : backedupChunks)
 		{
-			line = ch.getFileID() + "|" + ch.getChunkNR() + "|" + ch.getDesiredReplicationNr() + "\n";
+			line = ch.getFileID() + " " + ch.getChunkNR() + " " + ch.getDesiredReplicationNr() + "\n";
 			lineByte = line.getBytes();
 			saveFile.write(lineByte);
 		}
+		System.out.println("backedupChunks file saved!");
 		saveFile.close();				
 	}
 
@@ -537,10 +551,11 @@ public class Peer {
 		byte[] lineByte = new byte[1024];
 		for(FileInfo finfo : filesInfo)
 		{
-			line = finfo.getFilename() + "|" + finfo.getFileID() + "|" + finfo.getReplicationDegree() + "|" + finfo.getnTotalChunks() + "\n";
+			line = finfo.getFilename() + " " + finfo.getFileID() + " " + finfo.getReplicationDegree() + " " + finfo.getnTotalChunks() + "\n";
 			lineByte = line.getBytes();
 			saveFile.write(lineByte);
 		}
+		System.out.println("filesInfo file saved!");
 		saveFile.close();				
 	}
 
@@ -551,14 +566,16 @@ public class Peer {
 		byte[] lineByte = new byte[1024];
 		for(Map.Entry<Chunk, ArrayList<PeerAddress>> entry : storedsInfo.entrySet())
 		{
-			line = entry.getKey().getFileID() + "|" + entry.getKey().getChunkNR() + "|" + entry.getKey().getDesiredReplicationNr();
+			line = entry.getKey().getFileID() + " " + entry.getKey().getChunkNR() + " " + entry.getKey().getDesiredReplicationNr();
 			for(PeerAddress pa : entry.getValue())
 			{
-				line += "|" + pa.getAddress();
+				line += " " + pa.getAddress();
 			}
+			line += "\n";
 			lineByte = line.getBytes();
 			saveFile.write(lineByte);
 		}
+		System.out.println("storedsInfo file saved!");
 		saveFile.close();				
 	}
 }
