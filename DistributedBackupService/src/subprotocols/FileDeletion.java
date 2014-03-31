@@ -56,6 +56,7 @@ public class FileDeletion  extends MulticastChannelMsg{
 			try {
 				String[] filesToDelete = getFileChunkstoDelete(Definitions.backupFilesDirectory+fileID);
 				for(String s : filesToDelete) {
+					System.out.println("Deleting File: " + s);
 					Files.deleteIfExists(Paths.get(Definitions.backupFilesDirectory+s));
 				}
 			} catch (IOException e) {
@@ -73,7 +74,7 @@ public class FileDeletion  extends MulticastChannelMsg{
 		{
 			public boolean accept(File dir, String name)
 			{
-				return name.startsWith(justFilename) && name.substring(justFilename.length()).matches("^\\.\\d+$");
+				return name.startsWith(justFilename);
 			}
 		});
 		return matchingFiles;
