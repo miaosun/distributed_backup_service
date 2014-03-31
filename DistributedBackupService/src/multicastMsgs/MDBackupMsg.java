@@ -116,6 +116,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 					try {
 						ch.saveChunk(body);
 						Peer.addtoStoredsInfo(ch, new PeerAddress(InetAddress.getLocalHost(), 0));
+						System.out.println(":::::::: "+Peer.getStoredsInfo().size());
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

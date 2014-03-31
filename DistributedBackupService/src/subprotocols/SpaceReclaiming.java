@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Random;
 
+import multicastMsgs.MControlReader;
 import multicastMsgs.MDBackupMsg;
 import multicastMsgs.MulticastChannelMsg;
 import Peer.Chunk;
@@ -46,7 +47,9 @@ public class SpaceReclaiming extends MulticastChannelMsg {
 				Chunk chk = null;
 				int max = 0;
 				for(Chunk ch : Peer.getBackedupChunks()) {
+					System.out.println(Peer.getStoredsInfo().size());
 					int dif = (ch.getDesiredReplicationNr() - Peer.getStoredsInfo().get(ch).size());
+					
 					if(dif >= max)
 					{
 						max = dif;
@@ -57,10 +60,18 @@ public class SpaceReclaiming extends MulticastChannelMsg {
 				chunkName = chk.getFileID() + "." + chk.getChunkNR();
 
 				try {
-					Files.delete(Paths.get(chunkName));
+					Files.delete(Paths.get(Definitions.backupFilesDirectory+chunkName));
 					System.out.println("Chunk " + chunkName + " deleted!");
 					Peer.removeBackedupChunk(chk);
-				} catch (IOException e) {
+					MControlReader rMsg = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
+					
+					String removedMsg = "REMOVED " + Definitions.version +" " + chk.getFileID() + " " + chk.getChunkNR() + Definitions.CRLF + Definitions.CRLF;
+					byte[] sendData = new byte[100];
+					
+					sendData = removedMsg.getBytes();
+					rMsg.sendPacket(sendData);
+					Thread.sleep(200);
+				} catch (IOException | InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}		
