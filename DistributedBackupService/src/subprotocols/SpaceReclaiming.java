@@ -39,9 +39,12 @@ public class SpaceReclaiming extends MulticastChannelMsg {
 	public void run() {
 
 		if(isInitiatorPeer) {
-
+			
 			String chunkName="";
-
+			for(Chunk ch : Peer.getBackedupChunks()) {
+			System.out.println(":::: "+ch.getFileID()+" "+ch.getChunkNR() );
+              }
+							 
 			for(int i=0; i<nChunkToDelete; i++) {
 
 				Chunk chk = null;
@@ -95,8 +98,8 @@ public class SpaceReclaiming extends MulticastChannelMsg {
 					if(!Peer.wputchunkAlreadySent(removedChunk)) {
 						try {
 							String fileIDx = removedChunk.getFileID();
-							MDBackupMsg bMsg = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT, fileIDx, removedChunk.getDesiredReplicationNr());
-							String chunkFilename = Definitions.backupFilesDirectory+Peer.getFilenameByFileID(fileIDx)+"."+removedChunk.getChunkNR();
+							MDBackupMsg bMsg = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT, removedChunk.getFileID(), removedChunk.getDesiredReplicationNr());
+							String chunkFilename = Definitions.backupFilesDirectory+removedChunk.getFileID()+"."+removedChunk.getChunkNR();
 							byte[] body = Files.readAllBytes(Paths.get(chunkFilename));
 
 							long waitTime = 500;

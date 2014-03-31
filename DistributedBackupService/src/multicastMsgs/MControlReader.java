@@ -25,14 +25,14 @@ public class MControlReader extends MulticastChannelMsg {
 		System.arraycopy(packet.getData(), 0, message, 0, packet.getLength()-4);
 		String msg = new String(message);
 		
-		System.out.println("Message received: "+msg.substring(0,msg.length()-4));
+		System.out.println("Message received: "+msg.substring(0,msg.length()));
 		PeerAddress peer = new PeerAddress(packet.getAddress(),packet.getPort());
 		System.out.println("by Peer: "+packet.getAddress()+"  "+packet.getPort());
 		
 		System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
-		String fileID = "";
+		String fileID;
 		
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
@@ -66,6 +66,7 @@ public class MControlReader extends MulticastChannelMsg {
 		else if(cmd.equals("REMOVED")) {
 			if(verifyVersion(temp[1].trim())) {
 				fileID = temp[2].trim();
+				System.out.println("FILEID::::::::"+fileID);
 				int chunkNr = Integer.parseInt(temp[3].trim());
 				int desiredRepDeg = Peer.getDesiredRepDegByfileID(fileID);
 				Chunk ch = new Chunk(fileID, chunkNr, desiredRepDeg);
