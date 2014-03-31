@@ -98,7 +98,7 @@ public class SpaceReclaiming extends MulticastChannelMsg {
 
 
 
-		else {
+		else { //normal peer
 
 			Peer.removePeerInHash(removedChunk,peer);
 			if(!Peer.verifyDesiredRepDegree(removedChunk)) {
