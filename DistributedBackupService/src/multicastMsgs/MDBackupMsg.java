@@ -55,10 +55,10 @@ public class MDBackupMsg extends MulticastChannelMsg {
 	}
 
 	private void processMsg(byte[] msg) {
-		
+
 		int offset = 0;
 		String header = "";
-		
+
 		for(int i=0; i<msg.length; i++)
 		{
 			if(msg[i] == Definitions.CRLFseq[0] && msg[i+1] == Definitions.CRLFseq[1] && msg[i+2] == Definitions.CRLFseq[0] && msg[i+3] == Definitions.CRLFseq[1])
@@ -77,12 +77,14 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		Random random = new Random();
 		String[] temp = header.split(" ");
 		String cmd = temp[0].trim();
-		String fileID = temp[2].trim();
-		int chunkNR = Integer.parseInt(temp[3].trim());
-		int replicationDeg = Integer.parseInt(temp[4].substring(0,1));
 
 		if(cmd.equals("PUTCHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
+
+				String fileID = temp[2].trim();
+				int chunkNR = Integer.parseInt(temp[3].trim());
+				int replicationDeg = Integer.parseInt(temp[4].substring(0,1));
+
 				Chunk ch = new Chunk(fileID, chunkNR, replicationDeg);
 
 				//waits timeout time before sending STORED message

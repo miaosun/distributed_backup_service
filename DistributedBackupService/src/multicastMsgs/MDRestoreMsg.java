@@ -26,7 +26,7 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 	}
 
 	private void processMsg(byte[] msg) {
-		// TODO Auto-generated method stub
+		
 		int offset = 0;
 		String header = "";
 		for(int i=0; i<msg.length; i++)
@@ -39,18 +39,15 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 			}
 		}
 
-
 		String[] temp = header.split(" ");
-//		System.out.println("TESTING: ");
-//		for(int i=0; i<temp.length; i++) {
-//			System.out.println("Part "+ i+ ": "+temp[i]);
-//		}
-		String cmd = temp[0].trim();
-		String fileID = temp[2].trim();
-		int chunkNR = Integer.parseInt(temp[3].trim());
 
+		String cmd = temp[0].trim();
+		
 		if(cmd.equals("CHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
+
+				String fileID = temp[2].trim();
+				int chunkNR = Integer.parseInt(temp[3].trim());
 
 				System.out.println("> CHUNK Received: " + header);
 
