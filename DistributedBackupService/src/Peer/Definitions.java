@@ -23,6 +23,7 @@ public class Definitions {
 		public static int plusRepDegree = 1;
 
 		public static void setPlusRepDegree(int plusRepDegree) {
+			System.out.println(" with PlusRepDegree: "+plusRepDegree);
 			Definitions.plusRepDegree = plusRepDegree;
 		}
 
@@ -51,7 +52,7 @@ public class Definitions {
 		}
 
 		public static void setVersion(String version) {
-			System.out.println("--Using Protocol version 2.0");
+			System.out.print("--Using Protocol version 2.0 ");
 			Definitions.version = version;
 		}
 		
