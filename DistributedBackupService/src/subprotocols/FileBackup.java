@@ -32,20 +32,19 @@ public class FileBackup extends Thread {
 			boolean canGo = false;
 			File f = new File(filename);
 			String bitString = filename+f.lastModified()+f.length();
-			System.out.println("bitString: "+bitString);
+			//System.out.println("bitString: "+bitString);
 			String fileID = SHA256.hash256(bitString);
-			System.out.println("fileID: "+fileID);
-
+			
 			FileInfo fx = Peer.existsFile(filename);
 			if(fx != null) {
-				if(fx.getFileID() == fileID) {
-					System.out.println("BACKUP JA REALIZADO E NAO HOUVE ALTERACOES!");
+				if(fx.getFileID().equals(fileID)) {
+					System.out.println("\nBACKUP JA REALIZADO E NAO HOUVE ALTERACOES\n!");
 					canGo=false;
 				}
 				else
 				{
 					System.out.println("BACKUP JA REALIZADO MAS HOUVE ALTERACOES!");
-					FileDeletion f2 = new FileDeletion(fileID, true);
+					FileDeletion f2 = new FileDeletion(fx.getFileID(), true);
 					f2.start();
 					canGo=true;
 				}
@@ -54,18 +53,18 @@ public class FileBackup extends Thread {
 				canGo=true;
 
 			if(canGo) {
-				
+				System.out.println("fileID: "+fileID);
 				FileSplitter.split(filename);
 
 				int numberChunkParts = FileSplitter.getNumberParts(filename);
-				System.out.println("numberChunkParts: "+numberChunkParts);
-				System.out.println("REPDEGREE: "+replicationDegree);
+				//System.out.println("numberChunkParts: "+numberChunkParts);
+				//System.out.println("REPDEGREE: "+replicationDegree);
 				
 				//save at filesInfo List
 				Peer.addtoFilesInfo(filename, fileID, numberChunkParts, replicationDegree);
 				
 				MDBackupMsg bMsg = new MDBackupMsg(Definitions.MDBADDRESS, Definitions.MDBPORT, fileID, replicationDegree);
-				System.out.println("MDBackup created");
+				//System.out.println("MDBackup created");
 
 				for(int chunknr=0; chunknr < numberChunkParts; chunknr++)
 				{
@@ -95,7 +94,7 @@ public class FileBackup extends Thread {
 						}
 						else
 						{
-							System.out.println("Waiting for more peers...");
+							System.out.println(storedsNr+" response(s). Waiting for more peers...\n");
 							attempts--;
 							waitTime*=2;
 						}

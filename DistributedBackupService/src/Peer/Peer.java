@@ -7,6 +7,8 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -164,7 +166,7 @@ public class Peer {
 
 	public static FileInfo existsFile(String fname) {
 		for(FileInfo f : filesInfo ) {
-			if(f.getFilename().equals(fname)) {
+			if((f.getFilename()).equals(fname)) {
 				return f;
 			}
 		}
@@ -252,10 +254,10 @@ public class Peer {
 		while(true) {		
 			//loadFiles();
 			System.out.println("\n\nPlease Make a selection:"); 
-			System.out.println("[1] Send putchunk message"); 
-			System.out.println("[2] Restore a file:"); 
-			System.out.println("[3] Delete a file:");
-			System.out.println("[4] Space Reclaiming:");
+			System.out.println("[1] Backup a file"); 
+			System.out.println("[2] Restore a file"); 
+			System.out.println("[3] Delete a file");
+			System.out.println("[4] Space Reclaiming");
 			System.out.println("[5] Exit"); 
 
 			System.out.println("Selection: ");
@@ -360,13 +362,28 @@ public class Peer {
 			System.out.println("[DELETE]filename: ");
 			BufferedReader inputStream = new BufferedReader(new InputStreamReader(System.in));
 			String filename = Definitions.backupFilesDirectory+inputStream.readLine();
-
+			String fID;
 			FileInfo finfo = existsFile(filename);
 			if(finfo != null)
 			{
 				b = false;
+				fID = finfo.getFileID();
 				FileDeletion deletion = new FileDeletion(finfo.getFileID(), true);
 				deletion.start();
+				try {
+					deletion.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				//delete file
+				try {
+					Files.deleteIfExists(Paths.get(Peer.getFilenameByFileID(fID)));
+					System.out.println("File deleted successfully.");
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 			else
 				System.out.println("File hasn't been backed up, try again!\n");
@@ -378,7 +395,7 @@ public class Peer {
 		Boolean b = true;
 		while(b)
 		{
-			System.out.println("How many chunks to delete? ");
+			System.out.print("How many chunks to delete? ");
 
 			int chunksToDelete = scanner.nextInt();
 			if(chunksToDelete <= backedupChunks.size() && chunksToDelete > 0)
@@ -405,7 +422,7 @@ public class Peer {
 		//Scanner sc = new Scanner(System.in);
 		while(b)
 		{
-			System.out.println("How many replications? ");
+			System.out.print("How many replications? ");
 
 			int replicationDeg = scanner.nextInt();
 			//sc.close();

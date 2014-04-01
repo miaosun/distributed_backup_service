@@ -25,6 +25,7 @@ public class FileDeletion  extends MulticastChannelMsg{
 		if(isInitiatorPeer) {
 
 			String deleteMsg = "DELETE " + fileID + Definitions.CRLF + Definitions.CRLF;
+			System.out.println("Message Sent: "+deleteMsg.substring(0,deleteMsg.length()-4));
 			byte[] sendData = new byte[100];
 
 			int count = 3;
@@ -41,22 +42,15 @@ public class FileDeletion  extends MulticastChannelMsg{
 						e.printStackTrace();
 					}
 			}
-			//delete file
-			try {
-				Files.deleteIfExists(Paths.get(Peer.getFilenameByFileID(fileID)));
-				System.out.println("File deleted successfully.");
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+
 		}
-		else {
+		else { // receptor delete peer
 			try {
 				String[] filesToDelete = Peer.getFileChunkstoDelete(Definitions.backupFilesDirectory+fileID);
 				for(String s : filesToDelete) {
 					System.out.println("Deleting File: " + s);
 					Files.deleteIfExists(Paths.get(Definitions.backupFilesDirectory+s));
-					
+
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

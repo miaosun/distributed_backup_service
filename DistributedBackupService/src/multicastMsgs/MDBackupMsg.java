@@ -34,7 +34,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		else
 		{
 			String stringHeader = "PUTCHUNK"+" "+Definitions.version+" "+fileID+" "+chunkNR+" "+replicationDegree;
-			System.out.println("\"BackupChunk Message sent: "+stringHeader+"\"");
+			System.out.println("Message Sent: "+stringHeader);
 			stringHeader+=Definitions.CRLF+Definitions.CRLF;
 			byte[] header = stringHeader.getBytes();
 			byte[] message = new byte[header.length+bodyInBytes.length];
@@ -58,7 +58,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		// TODO Auto-generated method stub
 		int offset = 0;
 		String header = "";
-		System.out.println("MSG size: "+msg.length);
+		//System.out.println("MSG size: "+msg.length);
 		for(int i=0; i<msg.length; i++)
 		{
 			if(msg[i] == Definitions.CRLFseq[0] && msg[i+1] == Definitions.CRLFseq[1] && msg[i+2] == Definitions.CRLFseq[0] && msg[i+3] == Definitions.CRLFseq[1])

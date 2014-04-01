@@ -66,7 +66,7 @@ public class MControlReader extends MulticastChannelMsg {
 		else if(cmd.equals("REMOVED")) {
 			if(verifyVersion(temp[1].trim())) {
 				fileID = temp[2].trim();
-				System.out.println("FILEID::::::::"+fileID);
+				//System.out.println("FILEID::::::::"+fileID);
 				int chunkNr = Integer.parseInt(temp[3].trim());
 				int desiredRepDeg = Peer.getDesiredRepDegByfileID(fileID);
 				Chunk ch = new Chunk(fileID, chunkNr, desiredRepDeg);
