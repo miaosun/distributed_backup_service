@@ -82,7 +82,7 @@ public class MControlReader extends MulticastChannelMsg {
 		}
 		else
 		{
-			System.out.println("MESSAGE IGNORED");
+			System.out.println("MESSAGE IGNORED: "+msg);
 		}
 		
 	}

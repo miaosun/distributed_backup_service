@@ -55,10 +55,10 @@ public class MDBackupMsg extends MulticastChannelMsg {
 	}
 
 	private void processMsg(byte[] msg) {
-		// TODO Auto-generated method stub
+		
 		int offset = 0;
 		String header = "";
-		//System.out.println("MSG size: "+msg.length);
+		
 		for(int i=0; i<msg.length; i++)
 		{
 			if(msg[i] == Definitions.CRLFseq[0] && msg[i+1] == Definitions.CRLFseq[1] && msg[i+2] == Definitions.CRLFseq[0] && msg[i+3] == Definitions.CRLFseq[1])
@@ -123,6 +123,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 					//enviar stored
 					String storedMsg = "STORED" + header.substring(header.indexOf(' ')) + Definitions.CRLF + Definitions.CRLF;
 					try {
+						System.out.println("Message Sent: "+storedMsg.substring(0,storedMsg.length()-4));
 						MControlReader MC = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
 						MC.sendMessages(storedMsg);
 					} catch (IOException e1) {
@@ -134,7 +135,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 		}
 		else
 		{
-			System.out.println("MESSAGE IGNORED");
+			System.out.println("MESSAGE IGNORED: "+header);
 		}
 	}
 }
