@@ -20,7 +20,11 @@ public class Definitions {
 		
 		public final static String backupFilesDirectory = "backup_files/";
 		
-		public final static int plusRepDegree = 1;
+		public static int plusRepDegree = 1;
+
+		public static void setPlusRepDegree(int plusRepDegree) {
+			Definitions.plusRepDegree = plusRepDegree;
+		}
 
 		public static void setMCPORT(int mCPORT) {
 			MCPORT = mCPORT;
@@ -47,6 +51,7 @@ public class Definitions {
 		}
 
 		public static void setVersion(String version) {
+			System.out.println("--Using Protocol version 2.0");
 			Definitions.version = version;
 		}
 		

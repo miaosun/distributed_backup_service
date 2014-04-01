@@ -65,6 +65,11 @@ public class Peer {
 	 */
 	public static void main(String[] args) throws IOException {
 
+		if(args.length==2) {
+			Definitions.setVersion(args[0]);
+			Definitions.setPlusRepDegree(Integer.parseInt(args[1]));
+		}
+		
 		if(args.length >=6) {
 			Definitions.setMCADDRESS(args[0]);
 			Definitions.setMCPORT(Integer.parseInt(args[1]));
@@ -72,8 +77,9 @@ public class Peer {
 			Definitions.setMDBPORT(Integer.parseInt(args[3]));
 			Definitions.setMDRADDRESS(args[4]);
 			Definitions.setMDRPORT(Integer.parseInt(args[5]));
-			if(args.length==7) {
+			if(args.length==8) {
 				Definitions.setVersion(args[6]);
+				Definitions.setPlusRepDegree(Integer.parseInt(args[7]));
 			}
 			System.out.println("Address/Ports:");
 		}
@@ -93,7 +99,6 @@ public class Peer {
 		waitingChunksToSend = new HashMap<Chunk, Boolean>();
 		waitingPutChunksAtReclaiming = new HashMap<Chunk, Boolean>();
 
-		//TODO fazer set dos enderecos multicast e portos??
 
 		//lancar thread ler MC
 		MControlReader mc = new MControlReader(Definitions.MCADDRESS, Definitions.MCPORT);
@@ -473,7 +478,7 @@ public class Peer {
 			if(line != null) {
 				String[] chunkInfo = line.split(" ");
 				Chunk c = new Chunk(chunkInfo[0], Integer.parseInt(chunkInfo[1]), Integer.parseInt(chunkInfo[2].trim()));
-				
+
 				Peer.backedupChunks.add(c);
 			}
 			else
