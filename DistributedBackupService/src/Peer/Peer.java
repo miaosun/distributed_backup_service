@@ -64,7 +64,7 @@ public class Peer {
 	 * @throws IOException 
 	 */
 	public static void main(String[] args) throws IOException {
-
+		System.out.println();
 		if(args.length==2) {
 			Definitions.setVersion(args[0]);
 			Definitions.setPlusRepDegree(Integer.parseInt(args[1]));

@@ -95,7 +95,7 @@ public class MDBackupMsg extends MulticastChannelMsg {
 				}
 
 				boolean doIt=true;
-				if(Definitions.version == "2.0") {
+				if(Definitions.version.equals("2.0")) {
 
 					int rdActual = (Peer.getStoredsNr(ch)-ch.getDesiredReplicationNr());
 					if(rdActual>=Definitions.plusRepDegree) {
