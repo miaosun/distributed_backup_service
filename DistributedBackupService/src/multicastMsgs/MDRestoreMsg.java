@@ -9,7 +9,7 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 
 	public MDRestoreMsg(String adr, int port) throws IOException {
 		super(adr, port);
-		
+
 	}
 
 	@Override
@@ -20,13 +20,14 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 			//System.out.println("MDR thread waiting for chunk messages...");
 			byte[] data = new byte[65000];
 			data = receivePacketByte();
-			processMsg(data);
+			if(data!=null)
+				processMsg(data);
 		}
 
 	}
 
 	private void processMsg(byte[] msg) {
-		
+
 		int offset = 0;
 		String header = "";
 		for(int i=0; i<msg.length; i++)
@@ -42,7 +43,7 @@ public class MDRestoreMsg extends MulticastChannelMsg {
 		String[] temp = header.split(" ");
 
 		String cmd = temp[0].trim();
-		
+
 		if(cmd.equals("CHUNK")) {
 			if(verifyVersion(temp[1].trim())) {
 

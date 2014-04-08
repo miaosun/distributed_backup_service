@@ -7,7 +7,7 @@ import java.net.InetAddress;
 import java.net.MulticastSocket;
 
 public abstract class MulticastChannelMsg extends Thread {
-	
+
 	public int port;
 	public String adr;
 	MulticastSocket msocket;
@@ -21,11 +21,11 @@ public abstract class MulticastChannelMsg extends Thread {
 		msocket = new MulticastSocket(port);
 		maddress = InetAddress.getByName(adr);
 	}
-	
+
 	public void listen() throws IOException {
 		msocket.joinGroup(maddress);
 	}
-	
+
 	public void joinMulticastGroup() {
 		try {
 			msocket.joinGroup(maddress);
@@ -36,27 +36,30 @@ public abstract class MulticastChannelMsg extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public byte[] receivePacketByte() {
 		try{
 			byte[] data = new byte[64085];
 			DatagramPacket packet = new DatagramPacket(data,data.length);
 			msocket.receive(packet);
-			byte[] receiveD = new byte[packet.getLength()];
-			System.arraycopy(packet.getData(), 0, receiveD, 0, packet.getLength());
-			
-			return receiveD;
+			if(! packet.getAddress().getHostAddress().equals(InetAddress.getLocalHost().getHostAddress()) )
+			{
+				byte[] receiveD = new byte[packet.getLength()];
+				System.arraycopy(packet.getData(), 0, receiveD, 0, packet.getLength());
+				return receiveD;
+			}
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
-	
+
 	public DatagramPacket getPacket() throws IOException {
-			byte[] data = new byte[1024];
-			DatagramPacket packet = new DatagramPacket(data,data.length);
-			msocket.receive(packet);
-			return packet;
+		byte[] data = new byte[1024];
+		DatagramPacket packet = new DatagramPacket(data,data.length);
+		msocket.receive(packet);
+		return packet;
 	}
 
 	public void sendPacket(byte[] buffer) {
@@ -70,7 +73,7 @@ public abstract class MulticastChannelMsg extends Thread {
 			e.printStackTrace();
 		}
 	}
-	
+
 
 	public Boolean verifyVersion(String version) {
 		if(version.length()==3 && version.substring(1,2).equals(".") && Character.isDigit(version.charAt(0)) && Character.isDigit(version.charAt(2))) {
@@ -81,7 +84,7 @@ public abstract class MulticastChannelMsg extends Thread {
 	}
 
 	public void run() {
-		
+
 	}
 
 }
