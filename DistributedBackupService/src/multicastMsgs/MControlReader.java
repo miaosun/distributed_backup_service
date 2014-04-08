@@ -2,6 +2,7 @@ package multicastMsgs;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
+import java.net.InetAddress;
 
 import subprotocols.FileDeletion;
 import subprotocols.SpaceReclaiming;
@@ -10,30 +11,30 @@ import Peer.Peer;
 import Peer.PeerAddress;
 
 public class MControlReader extends MulticastChannelMsg {
-	
+
 	public MControlReader(String adr, int port) throws IOException {
 		super(adr, port); //TODO change to Definitions. ... ? (& same other mchannels)
 	}
-	
+
 	public void sendMessages(String msg) {
 		sendPacket(msg.getBytes());
 	}
 
 	public void processPacket(DatagramPacket packet) throws IOException {
-		
+
 		byte[] message = new byte[packet.getLength()-4];
 		System.arraycopy(packet.getData(), 0, message, 0, packet.getLength()-4);
 		String msg = new String(message);
-		
+
 		System.out.println("Message received: "+msg.substring(0,msg.length())+" > from: "+packet.getAddress());
 		PeerAddress peer = new PeerAddress(packet.getAddress(),packet.getPort());
 		//System.out.println("by Peer: "+packet.getAddress()+"  "+packet.getPort());
-		
+
 		//System.out.println("MCReader-> Process Message");
 		String[] temp = msg.split(" ");
 		String cmd = temp[0].trim();
 		String fileID;
-		
+
 		if(cmd.equals("STORED")) {
 			if(verifyVersion(temp[1].trim())) {
 				fileID = temp[2].trim();
@@ -84,7 +85,7 @@ public class MControlReader extends MulticastChannelMsg {
 		{
 			System.out.println("MESSAGE IGNORED: "+msg);
 		}
-		
+
 	}
 
 	public void run() {
@@ -94,7 +95,9 @@ public class MControlReader extends MulticastChannelMsg {
 		while(true) {
 			try {
 				DatagramPacket packet = getPacket();
-				processPacket(packet);
+				if(! packet.getAddress().getHostAddress().equals(InetAddress.getLocalHost().getHostAddress()) ) {
+					processPacket(packet);
+				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
